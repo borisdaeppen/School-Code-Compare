@@ -118,11 +118,6 @@ sub prepare_php {
     $str1 =~ s/\s*//g;
     $str2 =~ s/\s*//g;
 
-    say $str1;
-    say "\n";
-    say $str2;
-    say "\n";
-
     return ($str1, $str2);
 }
 
