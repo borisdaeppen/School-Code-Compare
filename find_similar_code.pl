@@ -42,7 +42,7 @@ foreach my $filepath ( <STDIN> ) {
 }
 
 say '# comparing ' . @files . ' files';
-say "#edits\tlength\tfile1\tfile2";
+say "#edits\tratio\tlength\tfile1\tfile2";
 
 for (my $i=0; $i < @files - 1; $i++) {
     for (my $j=$i+1; $j < @files; $j++) {
@@ -62,8 +62,8 @@ for (my $i=0; $i < @files - 1; $i++) {
              $cleaned_code2) = prepare_html  ( $files[$i],  $files[$j] );
         }
 
-        my ($res, $diff) = measure( $cleaned_code1,  $cleaned_code2);
-        say "$res\t$diff\t$files[$i]\t$files[$j]";
+        my ($res, $prop, $diff) = measure( $cleaned_code1,  $cleaned_code2);
+        say "$res\t$prop\t$diff\t$files[$i]\t$files[$j]";
     }
 }
 
@@ -186,9 +186,14 @@ sub measure {
     $diff = $diff * -1 if ($diff < 0);
 
     if ($diff > $CHARDIFF) {
-        return (-1, $diff);
+        return (-1, -1, $diff);
     }
     else {
-        return (distance($str1, $str2), $diff);
+        my $distance = distance($str1, $str2);
+
+        my $total_chars = length($str1) + length($str2);
+        my $proportion_chars_changes = int(($distance / ($total_chars / 2))*100);
+
+        return ($distance, $proportion_chars_changes, $diff);
     }
 }
