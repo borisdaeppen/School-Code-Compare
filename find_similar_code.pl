@@ -1,9 +1,26 @@
+# Autor: Boris Däppen, 2015-2016
+# No guarantee given, use at own risk and will
+
 use strict;
 use warnings;
 use utf8;
 use feature 'say';
 
 use Text::Levenshtein qw(distance);
+
+# Kombinatorisches Verhalten
+# -----------------------------------------------------------------------------
+#
+# Anzahl Vergleiche:
+# n! / ((n - m)! * m!)
+# wenn
+# n = Anzahl Elemente   (Anzahl Code-Dateien die zu Vergleichen sind)
+# m = gezogene Elemente (immer 2, da zwei Dateien miteinander verglichen werden)
+#
+# Bei 100 Skripte gibt das
+# 100! / (98! * 2!) = 4950
+#
+# Rechner: http://de.numberempire.com/combinatorialcalculator.php
 
 unless ( defined $ARGV[0] ) {
     say "Please define Programming Language";
