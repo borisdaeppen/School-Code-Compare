@@ -81,8 +81,8 @@ for (my $i=0; $i < @files - 1; $i++) {
         }
 
         my ($res, $prop, $diff) =
-                            $comparer->measure( $cleaned_code1,  $cleaned_code2);
-        say "$res\t$prop\t$diff\t$files[$i]\t$files[$j]";
+                            $comparer->measure( $cleaned_code1, $cleaned_code2);
+        say "$res\t$prop\t$diff\t$files[$i]\t$files[$j]" if (defined $res);
     }
 }
 

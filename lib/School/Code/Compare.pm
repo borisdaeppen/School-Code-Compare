@@ -39,7 +39,12 @@ sub measure {
 
     if ($self->{min_char_total} <= $length_str1
      or $self->{min_char_total} <= $length_str2) {
-        return (-1, -1, '');
+        return (
+            undef,
+            undef,
+            "skipped because one file is smaller equals "
+            . $self->{min_char_total}
+        );
     }
 
     my $diff = $length_str1 - $length_str2;
@@ -47,7 +52,10 @@ sub measure {
     $diff = $diff * -1 if ($diff < 0);
 
     if ($diff > $self->{max_char_diff}) {
-        return (-1, -1, $diff);
+        return (
+            undef,
+            undef,
+            "skipped, because of large difference in chars: $diff");
     }
     else {
         my $distance = distance($str1, $str2);
