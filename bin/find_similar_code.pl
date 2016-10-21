@@ -26,7 +26,11 @@ use School::Code::Simplify;
 # Rechner: http://de.numberempire.com/combinatorialcalculator.php
 
 unless ( defined $ARGV[0] ) {
-    say "Please define Programming Language";
+    say 'Please define Programming Language in the first argument.';
+    say 'Supportet options are:';
+    say '  - hashy:  python, perl, bash';
+    say '  - slashy: php, c++, c#';
+    say '  - html';
     exit 1;
 }
 my $lang = $ARGV[0];
@@ -56,11 +60,19 @@ for (my $i=0; $i < @files - 1; $i++) {
 
         my ($cleaned_code1, $cleaned_code2);
 
-        if ($lang eq 'python') {
+        if ($lang eq 'python'
+         or $lang eq 'perl'
+         or $lang eq 'bash'
+         or $lang eq 'hashy'
+         ) {
             ($cleaned_code1,
              $cleaned_code2) = $simplifier->hashy  ( $files[$i],  $files[$j] );
         }
-        if ($lang eq 'php') {
+        if ($lang eq 'php'
+         or $lang eq 'c++'
+         or $lang eq 'c#'
+         or $lang eq 'slashy'
+         ) {
             ($cleaned_code1,
              $cleaned_code2) = $simplifier->slashy ( $files[$i],  $files[$j] );
         }
