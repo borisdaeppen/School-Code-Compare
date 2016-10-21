@@ -9,6 +9,7 @@ use feature 'say';
 use Text::Levenshtein qw(distance);
 
 use School::Code::Compare;
+use School::Code::Simplify;
 
 # Kombinatorisches Verhalten
 # -----------------------------------------------------------------------------
@@ -36,7 +37,9 @@ my $CHARDIFF = 70;
 
 my @files = ();
 
-my $compare = School::Code::Compare->new()->set_max_char_difference($CHARDIFF);
+my $comparer   = School::Code::Compare->new()
+                                      ->set_max_char_difference($CHARDIFF);
+my $simplifier = School::Code::Simplify->new();
 
 foreach my $filepath ( <STDIN> ) {
     chomp( $filepath );
@@ -55,129 +58,20 @@ for (my $i=0; $i < @files - 1; $i++) {
 
         if ($lang eq 'python') {
             ($cleaned_code1,
-             $cleaned_code2) = prepare_python( $files[$i],  $files[$j] );
+             $cleaned_code2) = $simplifier->prepare_python( $files[$i],  $files[$j] );
         }
         if ($lang eq 'php') {
             ($cleaned_code1,
-             $cleaned_code2) = prepare_php   ( $files[$i],  $files[$j] );
+             $cleaned_code2) = $simplifier->prepare_php   ( $files[$i],  $files[$j] );
         }
         if ($lang eq 'html') {
             ($cleaned_code1,
-             $cleaned_code2) = prepare_html  ( $files[$i],  $files[$j] );
+             $cleaned_code2) = $simplifier->prepare_html  ( $files[$i],  $files[$j] );
         }
 
         my ($res, $prop, $diff) =
-                            $compare->measure( $cleaned_code1,  $cleaned_code2);
+                            $comparer->measure( $cleaned_code1,  $cleaned_code2);
         say "$res\t$prop\t$diff\t$files[$i]\t$files[$j]";
     }
 }
 
-sub prepare_python {
-    my $f1 = shift;
-    my $f2 = shift;
-
-    open(my $fh1, '<:encoding(UTF-8)', $f1)
-      or die "Could not open file '$f1' $!";
-     
-    open(my $fh2, '<:encoding(UTF-8)', $f2)
-      or die "Could not open file '$f2' $!";
-    
-    my $str1 = '';
-    while (my $row = <$fh1>) {
-      chomp $row;
-      next if ($row =~ /^#/);
-      $row = $1 if ($row =~ /(.*)#.*/);
-      $str1 .= $row
-    }
-    close $fh1;
-    
-    my $str2 = '';
-    while (my $row = <$fh2>) {
-      chomp $row;
-      next if ($row =~ /^#/);
-      $row = $1 if ($row =~ /(.*)#.*/);
-      $str2 .= $row
-    }
-    close $fh2;
-
-    # Whitespace raus
-    $str1 =~ s/\s*//g;
-    $str2 =~ s/\s*//g;
-
-    #say $str1;
-    #say $str2;
-
-    return ($str1, $str2);
-}
-
-sub prepare_php {
-    my $f1 = shift;
-    my $f2 = shift;
-
-    open(my $fh1, '<:encoding(UTF-8)', $f1)
-      or die "Could not open file '$f1' $!";
-     
-    open(my $fh2, '<:encoding(UTF-8)', $f2)
-      or die "Could not open file '$f2' $!";
-    
-    my $str1 = '';
-    while (my $row = <$fh1>) {
-      chomp $row;
-      next if ($row =~ m!^/!);
-      $row = $1 if ($row =~ m!(.*)//.*!);
-      $row = $1 if ($row =~ m!(.*)/\*.*!);
-      $str1 .= $row
-    }
-    close $fh1;
-    
-    my $str2 = '';
-    while (my $row = <$fh2>) {
-      chomp $row;
-      next if ($row =~ m!^/!);
-      $row = $1 if ($row =~ m!(.*)//.*!);
-      $row = $1 if ($row =~ m!(.*)/\*.*!);
-      $str2 .= $row
-    }
-    close $fh2;
-
-    # Whitespace raus
-    $str1 =~ s/\s*//g;
-    $str2 =~ s/\s*//g;
-
-    return ($str1, $str2);
-}
-
-sub prepare_html {
-    my $f1 = shift;
-    my $f2 = shift;
-
-    open(my $fh1, '<:encoding(UTF-8)', $f1)
-      or die "Could not open file '$f1' $!";
-     
-    open(my $fh2, '<:encoding(UTF-8)', $f2)
-      or die "Could not open file '$f2' $!";
-    
-    my $str1 = '';
-    while (my $row = <$fh1>) {
-      chomp $row;
-      next if ($row =~ m/^<!--/);
-      $row = $1 if ($row =~ m/(.*)<!--.*/);
-      $str1 .= $row
-    }
-    close $fh1;
-    
-    my $str2 = '';
-    while (my $row = <$fh2>) {
-      chomp $row;
-      next if ($row =~ m/^<!--/);
-      $row = $1 if ($row =~ m/(.*)<!--.*/);
-      $str2 .= $row
-    }
-    close $fh2;
-
-    # Whitespace raus
-    $str1 =~ s/\s*//g;
-    $str2 =~ s/\s*//g;
-
-    return ($str1, $str2);
-}
