@@ -44,9 +44,6 @@ sub hashy {
     $str1 =~ s/\s*//g;
     $str2 =~ s/\s*//g;
 
-    #say $str1;
-    #say $str2;
-
     return ($str1, $str2);
 }
 

@@ -1,5 +1,10 @@
 package School::Code::Compare;
 
+use strict;
+use warnings;
+
+use Text::Levenshtein qw(distance);
+
 sub new {
     my $class = shift;
 
@@ -31,14 +36,17 @@ sub set_min_char_total {
 }
 
 sub measure {
+    my $self = shift;
+
     my $str1 = shift;
     my $str2 = shift;
 
     my $length_str1 = length($str1);
-    my $lentgh_str2 = length($str2);
+    my $length_str2 = length($str2);
 
-    if ($self->{min_char_total} <= $length_str1
-     or $self->{min_char_total} <= $length_str2) {
+
+    if ($self->{min_char_total} > $length_str1
+     or $self->{min_char_total} > $length_str2) {
         return (
             undef,
             undef,

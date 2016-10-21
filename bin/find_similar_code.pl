@@ -6,8 +6,6 @@ use warnings;
 use utf8;
 use feature 'say';
 
-use Text::Levenshtein qw(distance);
-
 use School::Code::Compare;
 use School::Code::Simplify;
 
@@ -25,15 +23,24 @@ use School::Code::Simplify;
 #
 # Rechner: http://de.numberempire.com/combinatorialcalculator.php
 
-unless ( defined $ARGV[0] ) {
-    say 'Please define Programming Language in the first argument.';
+if ( not defined $ARGV[0] or $ARGV[0] =~ /^-?-h/) {
+    say 'You must define the Programming Language in the first argument.';
     say 'Supportet options are:';
     say '  - hashy:  python, perl, bash';
     say '  - slashy: php, c++, c#';
     say '  - html';
+    say '';
+    say 'You can define an output format optionally as second argument:';
+    say '  - tab';
+    say '  - csv';
     exit 1;
 }
 my $lang = $ARGV[0];
+
+my $output_format = 'tab';
+if (defined $ARGV[1]) {
+    $output_format = $ARGV[1];
+}
 
 $| = 1;
 
@@ -51,8 +58,13 @@ foreach my $filepath ( <STDIN> ) {
     push @files, $filepath;
 }
 
+my $delimiter = "\t";
+if ($output_format eq 'csv') {
+    $delimiter = ',';
+}
+
 say '# comparing ' . @files . ' files';
-say "#edits\tratio\tlength\tfile1\tfile2";
+say '# edits needed' . $delimiter . 'edits over length' . $delimiter . 'delta length' . $delimiter . 'file1' . $delimiter . 'file2';
 
 for (my $i=0; $i < @files - 1; $i++) {
     for (my $j=$i+1; $j < @files; $j++) {
@@ -82,7 +94,8 @@ for (my $i=0; $i < @files - 1; $i++) {
 
         my ($res, $prop, $diff) =
                             $comparer->measure( $cleaned_code1, $cleaned_code2);
-        say "$res\t$prop\t$diff\t$files[$i]\t$files[$j]" if (defined $res);
+        say "$res$delimiter$prop$delimiter$diff$delimiter$files[$i]$delimiter$files[$j]";# if (defined $res);
+
     }
 }
 
