@@ -8,6 +8,8 @@ use feature 'say';
 
 use Text::Levenshtein qw(distance);
 
+use School::Code::Compare;
+
 # Kombinatorisches Verhalten
 # -----------------------------------------------------------------------------
 #
@@ -33,6 +35,8 @@ $| = 1;
 my $CHARDIFF = 70;
 
 my @files = ();
+
+my $compare = School::Code::Compare->new()->set_max_char_difference($CHARDIFF);
 
 foreach my $filepath ( <STDIN> ) {
     chomp( $filepath );
@@ -62,7 +66,8 @@ for (my $i=0; $i < @files - 1; $i++) {
              $cleaned_code2) = prepare_html  ( $files[$i],  $files[$j] );
         }
 
-        my ($res, $prop, $diff) = measure( $cleaned_code1,  $cleaned_code2);
+        my ($res, $prop, $diff) =
+                            $compare->measure( $cleaned_code1,  $cleaned_code2);
         say "$res\t$prop\t$diff\t$files[$i]\t$files[$j]";
     }
 }
@@ -175,25 +180,4 @@ sub prepare_html {
     $str2 =~ s/\s*//g;
 
     return ($str1, $str2);
-}
-
-sub measure {
-    my $str1 = shift;
-    my $str2 = shift;
-
-    my $diff = length($str1) - length($str2);
-    
-    $diff = $diff * -1 if ($diff < 0);
-
-    if ($diff > $CHARDIFF) {
-        return (-1, -1, $diff);
-    }
-    else {
-        my $distance = distance($str1, $str2);
-
-        my $total_chars = length($str1) + length($str2);
-        my $proportion_chars_changes = int(($distance / ($total_chars / 2))*100);
-
-        return ($distance, $proportion_chars_changes, $diff);
-    }
 }
