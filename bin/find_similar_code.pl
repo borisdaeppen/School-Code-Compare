@@ -37,12 +37,11 @@ my $lang = $ARGV[0];
 
 $| = 1;
 
-my $CHARDIFF = 70;
-
 my @files = ();
 
 my $comparer   = School::Code::Compare->new()
-                                      ->set_max_char_difference($CHARDIFF);
+                                      ->set_max_char_difference(70)
+                                      ->set_min_char_total     (20);
 my $simplifier = School::Code::Simplify->new();
 
 foreach my $filepath ( <STDIN> ) {
