@@ -10,7 +10,7 @@ sub new {
     return $self;
 }
 
-sub prepare_python {
+sub hashy {
     my $self = shift;
 
     my $f1 = shift;
@@ -50,7 +50,7 @@ sub prepare_python {
     return ($str1, $str2);
 }
 
-sub prepare_php {
+sub slashy {
     my $self = shift;
 
     my $f1 = shift;
@@ -89,7 +89,7 @@ sub prepare_php {
     return ($str1, $str2);
 }
 
-sub prepare_html {
+sub html {
     my $self = shift;
 
     my $f1 = shift;

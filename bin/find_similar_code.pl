@@ -58,15 +58,15 @@ for (my $i=0; $i < @files - 1; $i++) {
 
         if ($lang eq 'python') {
             ($cleaned_code1,
-             $cleaned_code2) = $simplifier->prepare_python( $files[$i],  $files[$j] );
+             $cleaned_code2) = $simplifier->hashy  ( $files[$i],  $files[$j] );
         }
         if ($lang eq 'php') {
             ($cleaned_code1,
-             $cleaned_code2) = $simplifier->prepare_php   ( $files[$i],  $files[$j] );
+             $cleaned_code2) = $simplifier->slashy ( $files[$i],  $files[$j] );
         }
         if ($lang eq 'html') {
             ($cleaned_code1,
-             $cleaned_code2) = $simplifier->prepare_html  ( $files[$i],  $files[$j] );
+             $cleaned_code2) = $simplifier->html   ( $files[$i],  $files[$j] );
         }
 
         my ($res, $prop, $diff) =
