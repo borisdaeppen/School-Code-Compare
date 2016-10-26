@@ -27,7 +27,7 @@ if ( not defined $ARGV[0] or $ARGV[0] =~ /^-?-h/) {
     say 'You must define the Programming Language in the first argument.';
     say 'Supportet options are:';
     say '  - hashy:  python, perl, bash';
-    say '  - slashy: php, c++, c#';
+    say '  - slashy: php, js, c++, c#';
     say '  - html';
     say '';
     say 'You can define an output format optionally as second argument:';
@@ -64,7 +64,7 @@ if ($output_format eq 'csv') {
 }
 
 say '# comparing ' . @files . ' files';
-say '# edits needed' . $delimiter . 'edits over length' . $delimiter . 'delta length' . $delimiter . 'file1' . $delimiter . 'file2';
+say '# edits over length' . $delimiter . 'edits needed' . $delimiter . 'delta length' . $delimiter . 'file1' . $delimiter . 'file2';
 
 for (my $i=0; $i < @files - 1; $i++) {
     for (my $j=$i+1; $j < @files; $j++) {
@@ -80,6 +80,7 @@ for (my $i=0; $i < @files - 1; $i++) {
              $cleaned_code2) = $simplifier->hashy  ( $files[$i],  $files[$j] );
         }
         if ($lang eq 'php'
+         or $lang eq 'js'
          or $lang eq 'c++'
          or $lang eq 'c#'
          or $lang eq 'slashy'
@@ -92,9 +93,9 @@ for (my $i=0; $i < @files - 1; $i++) {
              $cleaned_code2) = $simplifier->html   ( $files[$i],  $files[$j] );
         }
 
-        my ($res, $prop, $diff) =
+        my ($changes, $prop, $diff) =
                             $comparer->measure( $cleaned_code1, $cleaned_code2);
-        say "$res$delimiter$prop$delimiter$diff$delimiter$files[$i]$delimiter$files[$j]";# if (defined $res);
+        say "$prop$delimiter$changes$delimiter$diff$delimiter$files[$i]$delimiter$files[$j]" if (defined $changes);
 
     }
 }
