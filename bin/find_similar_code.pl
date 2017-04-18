@@ -29,6 +29,7 @@ if ( not defined $ARGV[0] or $ARGV[0] =~ /^-?-h/) {
     say '  - hashy:  python, perl, bash';
     say '  - slashy: php, js, c++, c#';
     say '  - html';
+    say '  - txt';
     say '';
     say 'You can define an output format optionally as second argument:';
     say '  - tab';
@@ -79,7 +80,7 @@ for (my $i=0; $i < @files - 1; $i++) {
             ($cleaned_code1,
              $cleaned_code2) = $simplifier->hashy  ( $files[$i],  $files[$j] );
         }
-        if ($lang eq 'php'
+        elsif ($lang eq 'php'
          or $lang eq 'js'
          or $lang eq 'c++'
          or $lang eq 'c#'
@@ -88,9 +89,13 @@ for (my $i=0; $i < @files - 1; $i++) {
             ($cleaned_code1,
              $cleaned_code2) = $simplifier->slashy ( $files[$i],  $files[$j] );
         }
-        if ($lang eq 'html') {
+        elsif ($lang eq 'html') {
             ($cleaned_code1,
              $cleaned_code2) = $simplifier->html   ( $files[$i],  $files[$j] );
+        }
+        elsif ($lang eq 'txt') {
+            ($cleaned_code1,
+             $cleaned_code2) = $simplifier->txt   ( $files[$i],  $files[$j] );
         }
 
         my ($changes, $prop, $diff) =
