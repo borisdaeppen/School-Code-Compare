@@ -3,7 +3,7 @@ package School::Code::Compare;
 use strict;
 use warnings;
 
-use Text::Levenshtein qw(distance);
+use Text::Levenshtein::XS qw(distance);
 
 sub new {
     my $class = shift;
