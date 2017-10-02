@@ -81,7 +81,8 @@ my @files = ();
 
 my $comparer   = School::Code::Compare->new()
                                       ->set_max_char_difference(70)
-                                      ->set_min_char_total     (20);
+                                      ->set_min_char_total     (20)
+                                      ->set_max_distance      (300);
 my $simplifier = School::Code::Simplify->new();
 
 foreach my $filepath ( <STDIN> ) {

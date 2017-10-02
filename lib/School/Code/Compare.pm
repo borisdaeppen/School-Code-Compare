@@ -11,6 +11,7 @@ sub new {
     my $self = {
                     max_char_diff  => 70,
                     min_char_total => 20,
+                    max_distance   => 300,
                };
     bless $self, $class;
 
@@ -30,6 +31,15 @@ sub set_min_char_total {
     my $self = shift;
 
     $self->{min_char_total} = shift;
+
+    # make this chainable in OO-interface
+    return $self;
+}
+
+sub set_max_distance {
+    my $self = shift;
+
+    $self->{max_distance} = shift;
 
     # make this chainable in OO-interface
     return $self;
@@ -66,12 +76,19 @@ sub measure {
             "skipped, because of large difference in chars: $diff");
     }
     else {
-        my $distance = distance($str1, $str2);
+        my $distance = distance($str1, $str2, $self->{max_distance});
 
-        my $total_chars = $length_str1 + $length_str2;
-        my $proportion_chars_changes = int(($distance / ($total_chars / 2))*100);
+        if (defined $distance) {
 
-        return ($distance, $proportion_chars_changes, $diff);
+            my $total_chars = $length_str1 + $length_str2;
+            my $proportion_chars_changes =
+                                    int(($distance / ($total_chars / 2))*100);
+
+            return ($distance, $proportion_chars_changes, $diff);
+        }
+        else {
+            return (undef, undef, $diff);
+        }
     }
 }
 
