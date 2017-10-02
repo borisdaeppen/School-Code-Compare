@@ -6,6 +6,8 @@ use warnings;
 use utf8;
 use feature 'say';
 
+use File::Slurp;
+
 use School::Code::Compare;
 use School::Code::Simplify;
 
@@ -54,9 +56,35 @@ my $simplifier = School::Code::Simplify->new();
 
 foreach my $filepath ( <STDIN> ) {
     chomp( $filepath );
-    #say "adding '$filepath' ...";
+#say "adding '$filepath' ...";
 
-    push @files, $filepath;
+    my @content = read_file( $filepath, binmode => ':utf8' ) ;
+
+    my $cleaned_content;
+
+    if ($lang eq 'python'
+     or $lang eq 'perl'
+     or $lang eq 'bash'
+     or $lang eq 'hashy'
+     ) {
+        $cleaned_content = $simplifier->hashy ( \@content );
+    }
+    elsif ($lang eq 'php'
+     or $lang eq 'js'
+     or $lang eq 'c++'
+     or $lang eq 'c#'
+     or $lang eq 'slashy'
+     ) {
+        $cleaned_content = $simplifier->slashy ( \@content );
+    }
+    elsif ($lang eq 'html') {
+        $cleaned_content = $simplifier->html ( \@content );
+    }
+    elsif ($lang eq 'txt') {
+        $cleaned_content = $simplifier->txt ( \@content );
+    }
+
+    push @files, { path => $filepath, clean_content => $cleaned_content };
 }
 
 my $delimiter = "\t";
@@ -70,37 +98,12 @@ say '# edits over length' . $delimiter . 'edits needed' . $delimiter . 'delta le
 for (my $i=0; $i < @files - 1; $i++) {
     for (my $j=$i+1; $j < @files; $j++) {
 
-        my ($cleaned_code1, $cleaned_code2);
-
-        if ($lang eq 'python'
-         or $lang eq 'perl'
-         or $lang eq 'bash'
-         or $lang eq 'hashy'
-         ) {
-            ($cleaned_code1,
-             $cleaned_code2) = $simplifier->hashy  ( $files[$i],  $files[$j] );
-        }
-        elsif ($lang eq 'php'
-         or $lang eq 'js'
-         or $lang eq 'c++'
-         or $lang eq 'c#'
-         or $lang eq 'slashy'
-         ) {
-            ($cleaned_code1,
-             $cleaned_code2) = $simplifier->slashy ( $files[$i],  $files[$j] );
-        }
-        elsif ($lang eq 'html') {
-            ($cleaned_code1,
-             $cleaned_code2) = $simplifier->html   ( $files[$i],  $files[$j] );
-        }
-        elsif ($lang eq 'txt') {
-            ($cleaned_code1,
-             $cleaned_code2) = $simplifier->txt   ( $files[$i],  $files[$j] );
-        }
 
         my ($changes, $prop, $diff) =
-                            $comparer->measure( $cleaned_code1, $cleaned_code2);
-        say "$prop$delimiter$changes$delimiter$diff$delimiter$files[$i]$delimiter$files[$j]" if (defined $changes);
+                            $comparer->measure( $files[$i]->{clean_content},
+                                                $files[$j]->{clean_content}
+                                              );
+        say "$prop$delimiter$changes$delimiter$diff$delimiter".$files[$i]->{path}."$delimiter".$files[$j]->{path} if (defined $changes);
 
     }
 }
