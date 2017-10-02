@@ -1,4 +1,4 @@
-# Autor: Boris Däppen, 2015-2016
+# Autor: Boris Däppen, 2015-2017
 # No guarantee given, use at own risk and will
 
 use strict;
