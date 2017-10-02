@@ -85,7 +85,15 @@ my $comparer   = School::Code::Compare->new()
                                       ->set_max_distance      (300);
 my $simplifier = School::Code::Simplify->new();
 
-foreach my $filepath ( <STDIN> ) {
+my @FILE_LIST = ();
+if (defined $o->{in}) {
+    @FILE_LIST = read_file( $o->{in}, binmode => ':utf8' );
+}
+else {
+    @FILE_LIST = <STDIN>;
+}
+
+foreach my $filepath ( @FILE_LIST ) {
     chomp( $filepath );
 #say "adding '$filepath' ...";
 
