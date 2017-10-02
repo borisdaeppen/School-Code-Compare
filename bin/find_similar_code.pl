@@ -7,6 +7,7 @@ use utf8;
 use feature 'say';
 
 use File::Slurp;
+use Getopt::Args;
 
 use School::Code::Compare;
 use School::Code::Simplify;
@@ -25,27 +26,56 @@ use School::Code::Simplify;
 #
 # Rechner: http://de.numberempire.com/combinatorialcalculator.php
 
-if ( not defined $ARGV[0] or $ARGV[0] =~ /^-?-h/) {
-    say 'You must define the Programming Language in the first argument.';
-    say 'Supportet options are:';
-    say '  - hashy:  python, perl, bash';
-    say '  - slashy: php, js, c++, c#';
-    say '  - html';
-    say '  - txt';
-    say '';
-    say 'You can define an output format optionally as second argument:';
-    say '  - tab';
-    say '  - csv';
-    exit 1;
-}
-my $lang = $ARGV[0];
+##################
+# OPTION PARSING #
+##################
 
-my $output_format = 'tab';
-if (defined $ARGV[1]) {
-    $output_format = $ARGV[1];
+my $s = '                   ';
+my $opt_desc_lang =
+    "$s" . 'Supportet options are:'
+. "\n$s" . '  - hashy:  python, perl, bash'
+. "\n$s" . '  - slashy: php, js, c++, c#'
+. "\n$s" . '  - html'
+. "\n$s" . '  - txt';
+
+my $opt_desc_out =
+    "$s" . 'You can define an output format:'
+. "\n$s" . '  - tab'
+. "\n$s" . '  - csv';
+
+arg lang => (
+    isa      => 'Str',
+    required => 1,
+    comment  => "language to parse\n" . $opt_desc_lang,
+);
+
+opt in => (
+    isa     => 'Str',
+    alias   => 'i',
+    comment => 'file to read from (containing filepaths)' . "\n$s" . 'otherwise read from STDIN',
+);
+
+opt out => (
+    isa     => 'Str',
+    alias   => 'o',
+    default => 'tab',
+    comment => "output format\n" . $opt_desc_out,
+);
+
+my $o = optargs;
+
+my $lang          = $o->{lang};
+my $output_format = $o->{out};
+
+unless ($lang =~ /hashy|python|perl|bash|slashy|php|js|c\+\+|c#|html|txt/) {
+    die("lang not supported\n$opt_desc_lang\n");
 }
 
-$| = 1;
+#$| = 1;
+
+##################
+# PREPARING DATA #
+##################
 
 my @files = ();
 
@@ -86,6 +116,10 @@ foreach my $filepath ( <STDIN> ) {
 
     push @files, { path => $filepath, clean_content => $cleaned_content };
 }
+
+################################################
+# DO THE ACTUAL WORK... COMPARING ALL THE DATA #
+################################################
 
 my $delimiter = "\t";
 if ($output_format eq 'csv') {
