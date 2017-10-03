@@ -57,12 +57,13 @@ sub measure {
 
     if ($self->{min_char_total} > $length_str1
      or $self->{min_char_total} > $length_str2) {
-        return (
-            undef,
-            undef,
-            "skipped because one file is smaller equals "
-            . $self->{min_char_total}
-        );
+        return {
+            distance     => undef,
+            ratio        => undef,
+            delta_length => undef,
+            comment      => 'skipped: smaller than '
+                            . $self->{min_char_total},
+        };
     }
 
     my $diff = $length_str1 - $length_str2;
@@ -70,10 +71,13 @@ sub measure {
     $diff = $diff * -1 if ($diff < 0);
 
     if ($diff > $self->{max_char_diff}) {
-        return (
-            undef,
-            undef,
-            "skipped, because of large difference in chars: $diff");
+        return {
+            distance     => undef,
+            ratio        => undef,
+            delta_length => $diff,
+            comment      => 'skipped: delta in length bigger than '
+                            . $self->{max_char_diff},
+        };
     }
     else {
         my $distance = distance($str1, $str2, $self->{max_distance});
@@ -84,10 +88,21 @@ sub measure {
             my $proportion_chars_changes =
                                     int(($distance / ($total_chars / 2))*100);
 
-            return ($distance, $proportion_chars_changes, $diff);
+            return {
+                distance     => $distance,
+                ratio        => $proportion_chars_changes,
+                delta_length => $diff,
+                comment      => 'comparison done',
+            };
         }
         else {
-            return (undef, undef, $diff);
+            return {
+                distance     => undef,
+                ratio        => undef,
+                delta_length => $diff,
+                comment      => 'skipped: distance higher than '
+                                . $self->{max_distance},
+            };
         }
     }
 }

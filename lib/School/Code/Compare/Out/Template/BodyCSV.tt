@@ -1,0 +1,11 @@
+# RATIO
+# distance/edits devided by length
+# DISTANCE
+# edits/changes needed to come from file1 to file2
+# DELTA LENGTH
+# difference in length of file 1 to file2
+# FILE1
+# path to file1
+# FILE2
+# path to file2
+[% data %]

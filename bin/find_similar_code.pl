@@ -3,14 +3,18 @@
 
 use strict;
 use warnings;
+use v5.22;
 use utf8;
 use feature 'say';
 
 use File::Slurp;
 use Getopt::Args;
+use Template;
+use DateTime;
 
 use School::Code::Compare;
 use School::Code::Simplify;
+use School::Code::Compare::Out::Template::Path;
 
 # Kombinatorisches Verhalten
 # -----------------------------------------------------------------------------
@@ -93,9 +97,10 @@ else {
     @FILE_LIST = <STDIN>;
 }
 
+say 'reading and preparing files...';
+
 foreach my $filepath ( @FILE_LIST ) {
     chomp( $filepath );
-#say "adding '$filepath' ...";
 
     my @content = read_file( $filepath, binmode => ':utf8' ) ;
 
@@ -135,19 +140,69 @@ if ($output_format eq 'csv') {
     $delimiter = ',';
 }
 
-say '# comparing ' . @files . ' files';
-say '# edits over length' . $delimiter . 'edits needed' . $delimiter . 'delta length' . $delimiter . 'file1' . $delimiter . 'file2';
+say 'comparing ' . @files . ' files...';
+
+my @result = ();
 
 for (my $i=0; $i < @files - 1; $i++) {
     for (my $j=$i+1; $j < @files; $j++) {
 
+        my $comparison = $comparer->measure( $files[$i]->{clean_content},
+                                             $files[$j]->{clean_content}
+                                           );
 
-        my ($changes, $prop, $diff) =
-                            $comparer->measure( $files[$i]->{clean_content},
-                                                $files[$j]->{clean_content}
-                                              );
-        say "$prop$delimiter$changes$delimiter$diff$delimiter".$files[$i]->{path}."$delimiter".$files[$j]->{path} if (defined $changes);
+        $comparison->{file1} = $files[$i]->{path};
+        $comparison->{file2} = $files[$j]->{path};
 
+        push @result, $comparison;
     }
 }
 
+####################
+# RENDERING OUTPUT #
+####################
+
+my $format = 'CSV';
+given ($output_format) {
+	$format = 'CSV'  when /^csv/;
+	$format = 'HTML' when /^html/;
+	$format = 'TAB'  when /^tab/;
+}
+
+my $tt     = Template->new;
+my $tt_dir = School::Code::Compare::Out::Template::Path->get();
+my $rendered_data_rows = '';
+
+my @result_sorted = sort { return  1 if (not defined $a->{ratio});
+                           return -1 if (not defined $b->{ratio});
+                           return $a->{ratio} <=> $b->{ratio};
+                         } @result;
+
+foreach my $comparison (@result_sorted) {
+    my $vars = {
+        ratio        => $comparison->{ratio},
+        distance     => $comparison->{distance},
+        delta_length => $comparison->{delta_length},
+        file1        => $comparison->{file1},
+        file2        => $comparison->{file2},
+        comment      => $comparison->{comment},
+    };
+
+    $tt->process("$tt_dir/$format.tt", $vars, \$rendered_data_rows)
+        || die $tt->error(), "\n";
+}
+
+my $now = DateTime->now;
+my $filename =
+               'code-comparison_'
+             . $now->ymd() . '_'
+			 . $now->hms('-')
+             . '.'
+             . lc $format;
+
+$tt->process(	"$tt_dir/Body$format.tt",
+				{ data => $rendered_data_rows },
+				$filename
+			) || die $tt->error(), "\n";
+
+say 'done. see file "'. $filename . '" for the result';
