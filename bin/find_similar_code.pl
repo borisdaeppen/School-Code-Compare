@@ -14,6 +14,7 @@ use DateTime;
 
 use School::Code::Compare;
 use School::Code::Simplify;
+use School::Code::Compare::Judge;
 use School::Code::Compare::Out::Template::Path;
 
 # Kombinatorisches Verhalten
@@ -143,6 +144,7 @@ say 'comparing ' . @files . ' files...';
 
 # measure Levenshtein distance within all possible file combinations
 my @result = ();
+my $judge = School::Code::Compare::Judge->new();
 
 for (my $i=0; $i < @files - 1; $i++) {
     for (my $j=$i+1; $j < @files; $j++) {
@@ -153,6 +155,8 @@ for (my $i=0; $i < @files - 1; $i++) {
 
         $comparison->{file1} = $files[$i]->{path};
         $comparison->{file2} = $files[$j]->{path};
+
+        $judge->look($comparison);
 
         push @result, $comparison;
     }
@@ -186,6 +190,7 @@ foreach my $comparison (@result_sorted) {
         ratio        => $comparison->{ratio},
         distance     => $comparison->{distance},
         delta_length => $comparison->{delta_length},
+        suspicious   => $comparison->{suspicious},
         file1        => $comparison->{file1},
         file2        => $comparison->{file2},
         comment      => $comparison->{comment},
