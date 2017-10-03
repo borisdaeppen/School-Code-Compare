@@ -196,12 +196,11 @@ foreach my $comparison (@result_sorted) {
 }
 
 my $now = DateTime->now;
-my $filename =
-               'code-comparison_'
-             . $now->ymd() . '_'
-			 . $now->hms('-')
-             . '.'
-             . lc $format;
+my $filename =    'code-comparison_'
+                . $now->ymd() . '_'
+                . $now->hms('-')
+                . '.'
+                . lc $format;
 
 # render again, this time merging the rendered rows into the wrapping body
 $tt->process(	"$tt_dir/Body$format.tt",
