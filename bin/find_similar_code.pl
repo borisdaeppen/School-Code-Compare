@@ -75,13 +75,9 @@ unless ($lang =~ /hashy|python|perl|bash|slashy|php|js|c\+\+|c#|html|txt/) {
     die("lang not supported\n$opt_desc_lang\n");
 }
 
-#$| = 1;
-
 ##################
 # PREPARING DATA #
 ##################
-
-my @files = ();
 
 my $comparer   = School::Code::Compare->new()
                                       ->set_max_char_difference(70)
@@ -98,6 +94,9 @@ else {
 }
 
 say 'reading and preparing files...';
+
+# simplify all file content and store it together with the path
+my @files = ();
 
 foreach my $filepath ( @FILE_LIST ) {
     chomp( $filepath );
@@ -142,6 +141,7 @@ if ($output_format eq 'csv') {
 
 say 'comparing ' . @files . ' files...';
 
+# measure Levenshtein distance within all possible file combinations
 my @result = ();
 
 for (my $i=0; $i < @files - 1; $i++) {
@@ -171,12 +171,15 @@ given ($output_format) {
 
 my $tt     = Template->new;
 my $tt_dir = School::Code::Compare::Out::Template::Path->get();
-my $rendered_data_rows = '';
 
+# sort by ratio, but make sure undef values are "big" (meaning, bottom/last)
 my @result_sorted = sort { return  1 if (not defined $a->{ratio});
                            return -1 if (not defined $b->{ratio});
                            return $a->{ratio} <=> $b->{ratio};
                          } @result;
+
+# we render all rows, appending it to one string
+my $rendered_data_rows = '';
 
 foreach my $comparison (@result_sorted) {
     my $vars = {
@@ -200,6 +203,7 @@ my $filename =
              . '.'
              . lc $format;
 
+# render again, this time merging the rendered rows into the wrapping body
 $tt->process(	"$tt_dir/Body$format.tt",
 				{ data => $rendered_data_rows },
 				$filename
