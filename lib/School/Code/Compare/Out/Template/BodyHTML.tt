@@ -2,11 +2,13 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    <style>
+    </style>
       <title>Code Comparison</title>
   </head>
   <body>
     <h1>Code Comparison</h1>
-    <table>
+    <table border='1'>
       <tr>
         <th>ratio</th> <!-- distance/edits devided by length -->
         <th>distance</th> <!-- edits/changes needed to come from file1 to file2 -->
