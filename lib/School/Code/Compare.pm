@@ -12,8 +12,6 @@ sub new {
                     max_char_diff  => 70,
                     min_char_total => 20,
                     max_distance   => 300,
-                    suspicious_ratio        => 40,
-                    highly_suspicious_ratio => 20,
                };
     bless $self, $class;
 
