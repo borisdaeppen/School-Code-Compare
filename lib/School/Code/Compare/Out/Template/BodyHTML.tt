@@ -13,6 +13,7 @@
         <th>delta length</th> <!-- difference in length of file 1 to file2 -->
         <th>file1</th> <!-- path to file1 -->
         <th>file2</th> <!-- path to file2 -->
+        <th>comment</th> <!-- some reasoning -->
       </tr>
 [% data %]
     </table>
