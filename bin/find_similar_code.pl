@@ -203,9 +203,9 @@ my $filename =    'code-comparison_'
                 . lc $format;
 
 # render again, this time merging the rendered rows into the wrapping body
-$tt->process(	"$tt_dir/Body$format.tt",
-				{ data => $rendered_data_rows },
-				$filename
-			) || die $tt->error(), "\n";
+$tt->process(   "$tt_dir/Body$format.tt",
+                { data => $rendered_data_rows },
+                $filename
+            )   || die $tt->error(), "\n";
 
 say 'done. see file "'. $filename . '" for the result';
