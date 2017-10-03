@@ -3,6 +3,7 @@
 
 use strict;
 use warnings;
+no warnings 'experimental'; # disable warnings from given/when
 use v5.22;
 use utf8;
 use feature 'say';
