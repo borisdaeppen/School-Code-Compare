@@ -145,6 +145,7 @@ say 'comparing ' . @files . ' files...';
 # measure Levenshtein distance within all possible file combinations
 my @result = ();
 my $judge = School::Code::Compare::Judge->new();
+my $count = 0;
 
 for (my $i=0; $i < @files - 1; $i++) {
     for (my $j=$i+1; $j < @files; $j++) {
@@ -159,8 +160,11 @@ for (my $i=0; $i < @files - 1; $i++) {
         $judge->look($comparison);
 
         push @result, $comparison;
+        $count++;
     }
 }
+
+say "made $count comparisons, rendering output...";
 
 ####################
 # RENDERING OUTPUT #
@@ -213,4 +217,4 @@ $tt->process(   "$tt_dir/Body$format.tt",
                 $filename
             )   || die $tt->error(), "\n";
 
-say 'done. see file "'. $filename . '" for the result';
+say 'DONE! see file "'. $filename . '" for the result';
