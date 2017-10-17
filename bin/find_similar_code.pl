@@ -82,9 +82,9 @@ unless ($lang =~ /hashy|python|perl|bash|slashy|php|js|c\+\+|c#|html|txt/) {
 ##################
 
 my $comparer   = School::Code::Compare->new()
-                                      ->set_max_char_difference(70)
-                                      ->set_min_char_total     (20)
-                                      ->set_max_distance      (300);
+                                      ->set_max_char_difference(400)
+                                      ->set_min_char_total     ( 20)
+                                      ->set_max_distance       (400);
 my $simplifier = School::Code::Simplify->new();
 
 my @FILE_LIST = ();
@@ -128,6 +128,11 @@ foreach my $filepath ( @FILE_LIST ) {
     elsif ($lang eq 'txt') {
         $cleaned_content = $simplifier->txt ( \@content );
     }
+
+#    say $cleaned_content if ($filepath =~ /Ehrsam/);
+#
+#    my $cleaned_content_sorted = join '', sort { $a cmp $b } split(//, $cleaned_content);
+#    say $cleaned_content_sorted if ($filepath =~ /Ehrsam/);
 
     push @files, { path => $filepath, clean_content => $cleaned_content };
 }
