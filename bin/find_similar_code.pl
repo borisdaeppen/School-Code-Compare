@@ -14,7 +14,7 @@ use Template;
 use DateTime;
 
 use School::Code::Compare;
-use School::Code::Simplify;
+use School::Code::Simplify::Comments;
 use School::Code::Compare::Judge;
 use School::Code::Compare::Out::Template::Path;
 
@@ -85,7 +85,7 @@ my $comparer   = School::Code::Compare->new()
                                       ->set_max_char_difference(400)
                                       ->set_min_char_total     ( 20)
                                       ->set_max_distance       (400);
-my $simplifier = School::Code::Simplify->new();
+my $simplifier = School::Code::Simplify::Comments->new();
 
 my @FILE_LIST = ();
 if (defined $o->{in}) {
@@ -105,14 +105,14 @@ foreach my $filepath ( @FILE_LIST ) {
 
     my @content = read_file( $filepath, binmode => ':utf8' ) ;
 
-    my $cleaned_content;
+    my @cleaned_content;
 
     if ($lang eq 'python'
      or $lang eq 'perl'
      or $lang eq 'bash'
      or $lang eq 'hashy'
      ) {
-        $cleaned_content = $simplifier->hashy ( \@content );
+        @cleaned_content = $simplifier->hashy ( \@content );
     }
     elsif ($lang eq 'php'
      or $lang eq 'js'
@@ -120,13 +120,13 @@ foreach my $filepath ( @FILE_LIST ) {
      or $lang eq 'c#'
      or $lang eq 'slashy'
      ) {
-        $cleaned_content = $simplifier->slashy ( \@content );
+        @cleaned_content = $simplifier->slashy ( \@content );
     }
     elsif ($lang eq 'html') {
-        $cleaned_content = $simplifier->html ( \@content );
+        @cleaned_content = $simplifier->html ( \@content );
     }
     elsif ($lang eq 'txt') {
-        $cleaned_content = $simplifier->txt ( \@content );
+        @cleaned_content = $simplifier->txt ( \@content );
     }
 
 #    say $cleaned_content if ($filepath =~ /Ehrsam/);
@@ -134,7 +134,9 @@ foreach my $filepath ( @FILE_LIST ) {
 #    my $cleaned_content_sorted = join '', sort { $a cmp $b } split(//, $cleaned_content);
 #    say $cleaned_content_sorted if ($filepath =~ /Ehrsam/);
 
-    push @files, { path => $filepath, clean_content => $cleaned_content };
+    my $cleaned = join '', @cleaned_content;
+
+    push @files, { path => $filepath, clean_content => $cleaned};
 }
 
 ################################################
