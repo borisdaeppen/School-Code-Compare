@@ -1,4 +1,4 @@
-package School::Code::Simplify;
+package School::Code::Simplify::Comments;
 
 use strict;
 
@@ -16,19 +16,17 @@ sub hashy {
     my $self      = shift;
     my $lines_ref = shift;
 
-    my $str1 = '';
+    my @cleaned = ();
 
     foreach my $row (@{$lines_ref}) {
-      chomp $row;
       next if ($row =~ /^#/);
       $row = $1 if ($row =~ /(.*)#.*/);
-      $str1 .= $row;
+      $row =~ s/\s*//g;
+      next if ($row eq '');
+      push @cleaned, $row;
     }
 
-    # Whitespace raus
-    $str1 =~ s/\s*//g;
-
-    return $str1;
+    return @cleaned;
 }
 
 sub slashy {
@@ -37,56 +35,50 @@ sub slashy {
 
     my @lines = @{$lines_ref};
 
-    my $str1 = '';
+    my @cleaned = ();
 
     foreach my $row (@lines) {
-      chomp $row;
       next if ($row =~ m!^/!);
       $row = $1 if ($row =~ m!(.*)//.*!);
       $row = $1 if ($row =~ m!(.*)/\*.*!);
-      $str1 .= $row;
+      $row =~ s/\s*//g;
+      next if ($row eq '');
+      push @cleaned, $row;
     }
 
-    # Whitespace raus
-    $str1 =~ s/\s*//g;
-
-    return $str1;
+    return @cleaned;
 }
 
 sub html {
     my $self      = shift;
     my $lines_ref = shift;
 
-    my $str1 = '';
+    my @cleaned = ();
 
     foreach my $row (@{$lines_ref}) {
-      chomp $row;
       next if ($row =~ m/^<!--/);
       $row = $1 if ($row =~ m/(.*)<!--.*/);
-      $str1 .= $row;
+      $row =~ s/\s*//g;
+      next if ($row eq '');
+      push @cleaned, $row;
     }
 
-    # Whitespace raus
-    $str1 =~ s/\s*//g;
-
-    return $str1;
+    return @cleaned;
 }
 
 sub txt {
     my $self      = shift;
     my $lines_ref = shift;
 
-    my $str1 = '';
+    my @cleaned = ();
 
     foreach my $row (@{$lines_ref}) {
-      chomp $row;
-      $str1 .= $row;
+      $row =~ s/\s*//g;
+      next if ($row eq '');
+      push @cleaned, $row;
     }
 
-    # Whitespace raus
-    $str1 =~ s/\s*//g;
-
-    return $str1;
+    return @cleaned;
 }
 
 1;

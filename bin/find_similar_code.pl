@@ -12,6 +12,7 @@ use File::Slurp;
 use Getopt::Args;
 use Template;
 use DateTime;
+use Array::Diff;
 
 use School::Code::Compare;
 use School::Code::Simplify::Comments;
@@ -135,8 +136,13 @@ foreach my $filepath ( @FILE_LIST ) {
 #    say $cleaned_content_sorted if ($filepath =~ /Ehrsam/);
 
     my $cleaned = join '', @cleaned_content;
+    my @cleaned_array_sorted = sort { $a cmp $b } @cleaned_content;
 
-    push @files, { path => $filepath, clean_content => $cleaned};
+    push @files, {  path               => $filepath,
+                    clean_content      => $cleaned,
+                    clean_array        => \@cleaned_content,
+                    clean_array_sorted => \@cleaned_array_sorted,
+    };
 }
 
 ################################################
@@ -158,9 +164,15 @@ my $count = 0;
 for (my $i=0; $i < @files - 1; $i++) {
     for (my $j=$i+1; $j < @files; $j++) {
 
+        # Levenshtein
         my $comparison = $comparer->measure( $files[$i]->{clean_content},
                                              $files[$j]->{clean_content}
                                            );
+
+        $comparison->{linediff} = Array::Diff->diff(
+                            $files[$i]->{clean_array_sorted},
+                            $files[$j]->{clean_array_sorted}
+                         )->count;
 
         $comparison->{file1} = $files[$i]->{path};
         $comparison->{file2} = $files[$j]->{path};
@@ -206,6 +218,7 @@ foreach my $comparison (@result_sorted) {
         file1        => $comparison->{file1},
         file2        => $comparison->{file2},
         comment      => $comparison->{comment},
+        linediff     => $comparison->{linediff},
     };
 
     $tt->process("$tt_dir/$format.tt", $vars, \$rendered_data_rows)
