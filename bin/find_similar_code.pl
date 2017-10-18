@@ -106,14 +106,14 @@ foreach my $filepath ( @FILE_LIST ) {
 
     my @content = read_file( $filepath, binmode => ':utf8' ) ;
 
-    my @cleaned_content;
+    my $cleaned;
 
     if ($lang eq 'python'
      or $lang eq 'perl'
      or $lang eq 'bash'
      or $lang eq 'hashy'
      ) {
-        @cleaned_content = $simplifier->hashy ( \@content );
+        $cleaned = $simplifier->hashy ( \@content );
     }
     elsif ($lang eq 'php'
      or $lang eq 'js'
@@ -121,38 +121,24 @@ foreach my $filepath ( @FILE_LIST ) {
      or $lang eq 'c#'
      or $lang eq 'slashy'
      ) {
-        @cleaned_content = $simplifier->slashy ( \@content );
+        $cleaned = $simplifier->slashy ( \@content );
     }
     elsif ($lang eq 'html') {
-        @cleaned_content = $simplifier->html ( \@content );
+        $cleaned = $simplifier->html ( \@content );
     }
     elsif ($lang eq 'txt') {
-        @cleaned_content = $simplifier->txt ( \@content );
+        $cleaned = $simplifier->txt ( \@content );
     }
 
-#    say $cleaned_content if ($filepath =~ /Ehrsam/);
-#
-#    my $cleaned_content_sorted = join '', sort { $a cmp $b } split(//, $cleaned_content);
-#    say $cleaned_content_sorted if ($filepath =~ /Ehrsam/);
-
-    my $cleaned = join '', @cleaned_content;
-    my @cleaned_array_sorted = sort { $a cmp $b } @cleaned_content;
-
     push @files, {  path               => $filepath,
-                    clean_content      => $cleaned,
-                    clean_array        => \@cleaned_content,
-                    clean_array_sorted => \@cleaned_array_sorted,
+                    code_printables    => $cleaned->{string},
+                    code_sortedlines   => $cleaned->{string_sortedlines},
     };
 }
 
 ################################################
 # DO THE ACTUAL WORK... COMPARING ALL THE DATA #
 ################################################
-
-my $delimiter = "\t";
-if ($output_format eq 'csv') {
-    $delimiter = ',';
-}
 
 say 'comparing ' . @files . ' files...';
 
@@ -165,14 +151,15 @@ for (my $i=0; $i < @files - 1; $i++) {
     for (my $j=$i+1; $j < @files; $j++) {
 
         # Levenshtein
-        my $comparison = $comparer->measure( $files[$i]->{clean_content},
-                                             $files[$j]->{clean_content}
+        my $comparison = $comparer->measure( $files[$i]->{code_printables},
+                                             $files[$j]->{code_printables}
                                            );
 
-        $comparison->{linediff} = Array::Diff->diff(
-                            $files[$i]->{clean_array_sorted},
-                            $files[$j]->{clean_array_sorted}
-                         )->count;
+        my $compsorted = $comparer->measure( $files[$i]->{code_sortedlines},
+                                             $files[$j]->{code_sortedlines}
+                                           );
+
+        $comparison->{distance_byline} = $compsorted->{distance};
 
         $comparison->{file1} = $files[$i]->{path};
         $comparison->{file2} = $files[$j]->{path};
@@ -218,7 +205,7 @@ foreach my $comparison (@result_sorted) {
         file1        => $comparison->{file1},
         file2        => $comparison->{file2},
         comment      => $comparison->{comment},
-        linediff     => $comparison->{linediff},
+        linediff     => $comparison->{distance_byline},
     };
 
     $tt->process("$tt_dir/$format.tt", $vars, \$rendered_data_rows)

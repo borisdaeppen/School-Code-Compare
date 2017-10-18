@@ -16,69 +16,83 @@ sub hashy {
     my $self      = shift;
     my $lines_ref = shift;
 
-    my @cleaned = ();
+    my @lines  = ();
+    my $string = '';
 
     foreach my $row (@{$lines_ref}) {
       next if ($row =~ /^#/);
       $row = $1 if ($row =~ /(.*)#.*/);
       $row =~ s/\s*//g;
       next if ($row eq '');
-      push @cleaned, $row;
+      push @lines, join '', sort { $a cmp $b } split //, $row;
+      $string .= $row;
     }
 
-    return @cleaned;
+    my $sorted_sortedlines = join '', sort { $a cmp $b } @lines;
+
+    return { string => $string, string_sortedlines => $sorted_sortedlines };
 }
 
 sub slashy {
     my $self      = shift;
     my $lines_ref = shift;
 
-    my @lines = @{$lines_ref};
+    my @lines  = ();
+    my $string = '';
 
-    my @cleaned = ();
-
-    foreach my $row (@lines) {
+    foreach my $row (@{$lines_ref}) {
       next if ($row =~ m!^/!);
       $row = $1 if ($row =~ m!(.*)//.*!);
       $row = $1 if ($row =~ m!(.*)/\*.*!);
       $row =~ s/\s*//g;
       next if ($row eq '');
-      push @cleaned, $row;
+      push @lines, join '', sort { $a cmp $b } split //, $row;
+      $string .= $row;
     }
 
-    return @cleaned;
+    my $sorted_sortedlines = join '', sort { $a cmp $b } @lines;
+
+    return { string => $string, string_sortedlines => $sorted_sortedlines };
 }
 
 sub html {
     my $self      = shift;
     my $lines_ref = shift;
 
-    my @cleaned = ();
+    my @lines  = ();
+    my $string = '';
 
     foreach my $row (@{$lines_ref}) {
       next if ($row =~ m/^<!--/);
       $row = $1 if ($row =~ m/(.*)<!--.*/);
       $row =~ s/\s*//g;
       next if ($row eq '');
-      push @cleaned, $row;
+      push @lines, join '', sort { $a cmp $b } split //, $row;
+      $string .= $row;
     }
 
-    return @cleaned;
+    my $sorted_sortedlines = join '', sort { $a cmp $b } @lines;
+
+    return { string => $string, string_sortedlines => $sorted_sortedlines };
 }
 
 sub txt {
     my $self      = shift;
     my $lines_ref = shift;
 
-    my @cleaned = ();
+    my @lines  = ();
+    my $string = '';
 
     foreach my $row (@{$lines_ref}) {
       $row =~ s/\s*//g;
       next if ($row eq '');
-      push @cleaned, $row;
+      push @lines, join '', sort { $a cmp $b } split //, $row;
+      $string .= $row;
     }
 
-    return @cleaned;
+    my $sorted_sortedlines = join '', sort { $a cmp $b } @lines;
+
+    return { string => $string, string_sortedlines => $sorted_sortedlines };
 }
 
 1;
