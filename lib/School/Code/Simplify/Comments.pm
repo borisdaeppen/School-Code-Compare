@@ -24,8 +24,10 @@ sub hashy {
       $row = $1 if ($row =~ /(.*)#.*/);
       $row =~ s/\s*//g;
       next if ($row eq '');
-      push @lines, join '', sort { $a cmp $b } split //, $row;
+#push @lines, join '', sort { $a cmp $b } split //, $row;
       $string .= $row;
+      $row =~ s/[a-zA-Z0-9]//g;
+      push @lines, $row;
     }
 
     my $sorted_sortedlines = join '', sort { $a cmp $b } @lines;
@@ -46,8 +48,10 @@ sub slashy {
       $row = $1 if ($row =~ m!(.*)/\*.*!);
       $row =~ s/\s*//g;
       next if ($row eq '');
-      push @lines, join '', sort { $a cmp $b } split //, $row;
+#push @lines, join '', sort { $a cmp $b } split //, $row;
       $string .= $row;
+      $row =~ s/[a-zA-Z0-9]//g;
+      push @lines, $row;
     }
 
     my $sorted_sortedlines = join '', sort { $a cmp $b } @lines;
@@ -67,7 +71,8 @@ sub html {
       $row = $1 if ($row =~ m/(.*)<!--.*/);
       $row =~ s/\s*//g;
       next if ($row eq '');
-      push @lines, join '', sort { $a cmp $b } split //, $row;
+#push @lines, join '', sort { $a cmp $b } split //, $row;
+      push @lines, $row;
       $string .= $row;
     }
 
@@ -86,7 +91,8 @@ sub txt {
     foreach my $row (@{$lines_ref}) {
       $row =~ s/\s*//g;
       next if ($row eq '');
-      push @lines, join '', sort { $a cmp $b } split //, $row;
+#push @lines, join '', sort { $a cmp $b } split //, $row;
+      push @lines, $row;
       $string .= $row;
     }
 

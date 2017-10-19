@@ -86,6 +86,10 @@ my $comparer   = School::Code::Compare->new()
                                       ->set_max_char_difference(400)
                                       ->set_min_char_total     ( 20)
                                       ->set_max_distance       (400);
+my $comparer2  = School::Code::Compare->new()
+                                      ->set_max_char_difference(800)
+                                      ->set_min_char_total     ( 20)
+                                      ->set_max_distance       (800);
 my $simplifier = School::Code::Simplify::Comments->new();
 
 my @FILE_LIST = ();
@@ -136,6 +140,9 @@ foreach my $filepath ( @FILE_LIST ) {
     };
 }
 
+#use Data::Dumper;
+#say Dumper(\@files);
+
 ################################################
 # DO THE ACTUAL WORK... COMPARING ALL THE DATA #
 ################################################
@@ -155,11 +162,11 @@ for (my $i=0; $i < @files - 1; $i++) {
                                              $files[$j]->{code_printables}
                                            );
 
-        my $compsorted = $comparer->measure( $files[$i]->{code_sortedlines},
+        my $compsorted =$comparer2->measure( $files[$i]->{code_sortedlines},
                                              $files[$j]->{code_sortedlines}
                                            );
 
-        $comparison->{distance_byline} = $compsorted->{distance};
+        $comparison->{distance_byline} = $compsorted->{distance} // 'x';
 
         $comparison->{file1} = $files[$i]->{path};
         $comparison->{file2} = $files[$j]->{path};
