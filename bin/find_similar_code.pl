@@ -135,8 +135,8 @@ foreach my $filepath ( @FILE_LIST ) {
     }
 
     push @files, {  path               => $filepath,
-                    code_printables    => $cleaned->{string},
-                    code_sortedlines   => $cleaned->{string_sortedlines},
+                    code_printables    => $cleaned->{visibles},
+                    code_sortedlines   => $cleaned->{signes_ordered},
     };
 }
 
