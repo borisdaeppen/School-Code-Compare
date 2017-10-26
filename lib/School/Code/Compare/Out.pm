@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use Template;
-use DateTime;
 use School::Code::Compare::Out::Template::Path;
 
 sub new {
@@ -47,9 +46,9 @@ sub set_lines {
 sub write {
     my $self       = shift;
 
-    my @result = @{$self->{lines}};
-    my $format =   $self->{format};
-    my $name   =   $self->{name};
+    my @result   = @{$self->{lines}};
+    my $format   =   $self->{format};
+    my $filename =   $self->{name};
 
     my $tt     = Template->new;
     my $tt_dir = School::Code::Compare::Out::Template::Path->get();
@@ -78,20 +77,12 @@ sub write {
             || die $tt->error(), "\n";
     }
     
-    my $now = DateTime->now;
-    my $filename =    $name
-                    . $now->ymd() . '_'
-                    . $now->hms('-')
-                    . '.'
-                    . lc $format;
-    
     # render again, this time merging the rendered rows into the wrapping body
     $tt->process(   "$tt_dir/Body$format.tt",
                     { data => $rendered_data_rows },
                     $filename
                 )   || die $tt->error(), "\n";
 
-    return $filename;
 }
 
 1;

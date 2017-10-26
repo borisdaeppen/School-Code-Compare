@@ -10,6 +10,7 @@ use feature 'say';
 
 use File::Slurp;
 use Getopt::Args;
+use DateTime;
 
 use School::Code::Compare;
 use School::Code::Simplify::Comments;
@@ -131,9 +132,10 @@ foreach my $filepath ( @FILE_LIST ) {
         $cleaned = $simplifier->txt ( \@content );
     }
 
-    push @files, {  path               => $filepath,
-                    code_printables    => $cleaned->{visibles},
-                    code_sortedlines   => $cleaned->{signes_ordered},
+    push @files, {  path                => $filepath,
+                    code_visibles       => $cleaned->{visibles},
+                    code_signes         => $cleaned->{signes},
+                    code_signes_ordered => $cleaned->{signes_ordered},
     };
 }
 
@@ -146,47 +148,59 @@ foreach my $filepath ( @FILE_LIST ) {
 
 say 'comparing ' . @files . ' files...';
 
+my $now = DateTime->now;
+
 # measure Levenshtein distance within all possible file combinations
-my @result = ();
-my $judge = School::Code::Compare::Judge->new();
-my $count = 0;
+for my $algo ( qw(visibles signes signes_ordered) ) {
 
-for (my $i=0; $i < @files - 1; $i++) {
-    for (my $j=$i+1; $j < @files; $j++) {
+    print "working on $algo... ";
 
-        # Levenshtein
-        my $comparison = $comparer->measure( $files[$i]->{code_printables},
-                                             $files[$j]->{code_printables}
-                                           );
+    my @result = ();
+    my $judge = School::Code::Compare::Judge->new();
+    my $count = 0;
 
-        $comparison->{file1} = $files[$i]->{path};
-        $comparison->{file2} = $files[$j]->{path};
-
-        $judge->look($comparison);
-
-        push @result, $comparison;
-        $count++;
+    for (my $i=0; $i < @files - 1; $i++) {
+        for (my $j=$i+1; $j < @files; $j++) {
+    
+            # Levenshtein
+            my $comparison = $comparer->measure( $files[$i]->{"code_$algo"},
+                                                 $files[$j]->{"code_$algo"}
+                                               );
+    
+            $comparison->{file1} = $files[$i]->{path};
+            $comparison->{file2} = $files[$j]->{path};
+    
+            $judge->look($comparison);
+    
+            push @result, $comparison;
+            $count++;
+        }
     }
+    
+    say "made $count comparisons, rendering output";
+
+    ####################
+    # RENDERING OUTPUT #
+    ####################
+    
+    my $format = 'CSV';
+    given ($output_format) {
+    	$format = 'CSV'  when /^csv/;
+    	$format = 'HTML' when /^html/;
+    	$format = 'TAB'  when /^tab/;
+    }
+    
+	my $filename =    $now->ymd() . '_' 
+					. $now->hms('-') . '_'
+					. $algo
+					. '.' 
+					. lc $format;
+    
+    my $out = School::Code::Compare::Out->new();
+    
+    $out->set_name($filename)->set_format($format)->set_lines(\@result);
+    
+    $out->write();
+    
+    say 'DONE! see file "'. $filename . '" for the result';
 }
-
-say "made $count comparisons, rendering output...";
-
-####################
-# RENDERING OUTPUT #
-####################
-
-my $format = 'CSV';
-given ($output_format) {
-	$format = 'CSV'  when /^csv/;
-	$format = 'HTML' when /^html/;
-	$format = 'TAB'  when /^tab/;
-}
-
-
-my $out = School::Code::Compare::Out->new();
-
-$out->set_name('code_compare')->set_format($format)->set_lines(\@result);
-
-my $filename = $out->write();
-
-say 'DONE! see file "'. $filename . '" for the result';
