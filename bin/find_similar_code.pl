@@ -10,14 +10,11 @@ use feature 'say';
 
 use File::Slurp;
 use Getopt::Args;
-use Template;
-use DateTime;
-use Array::Diff;
 
 use School::Code::Compare;
 use School::Code::Simplify::Comments;
 use School::Code::Compare::Judge;
-use School::Code::Compare::Out::Template::Path;
+use School::Code::Compare::Out;
 
 # Kombinatorisches Verhalten
 # -----------------------------------------------------------------------------
@@ -162,12 +159,6 @@ for (my $i=0; $i < @files - 1; $i++) {
                                              $files[$j]->{code_printables}
                                            );
 
-        my $compsorted =$comparer2->measure( $files[$i]->{code_sortedlines},
-                                             $files[$j]->{code_sortedlines}
-                                           );
-
-        $comparison->{distance_byline} = $compsorted->{distance} // 'x';
-
         $comparison->{file1} = $files[$i]->{path};
         $comparison->{file2} = $files[$j]->{path};
 
@@ -191,45 +182,11 @@ given ($output_format) {
 	$format = 'TAB'  when /^tab/;
 }
 
-my $tt     = Template->new;
-my $tt_dir = School::Code::Compare::Out::Template::Path->get();
 
-# sort by ratio, but make sure undef values are "big" (meaning, bottom/last)
-my @result_sorted = sort { return  1 if (not defined $a->{ratio});
-                           return -1 if (not defined $b->{ratio});
-                           return $a->{ratio} <=> $b->{ratio};
-                         } @result;
+my $out = School::Code::Compare::Out->new();
 
-# we render all rows, appending it to one string
-my $rendered_data_rows = '';
+$out->set_name('code_compare')->set_format($format)->set_lines(\@result);
 
-foreach my $comparison (@result_sorted) {
-    my $vars = {
-        ratio        => $comparison->{ratio},
-        distance     => $comparison->{distance},
-        delta_length => $comparison->{delta_length},
-        suspicious   => $comparison->{suspicious},
-        file1        => $comparison->{file1},
-        file2        => $comparison->{file2},
-        comment      => $comparison->{comment},
-        linediff     => $comparison->{distance_byline},
-    };
-
-    $tt->process("$tt_dir/$format.tt", $vars, \$rendered_data_rows)
-        || die $tt->error(), "\n";
-}
-
-my $now = DateTime->now;
-my $filename =    'code-comparison_'
-                . $now->ymd() . '_'
-                . $now->hms('-')
-                . '.'
-                . lc $format;
-
-# render again, this time merging the rendered rows into the wrapping body
-$tt->process(   "$tt_dir/Body$format.tt",
-                { data => $rendered_data_rows },
-                $filename
-            )   || die $tt->error(), "\n";
+my $filename = $out->write();
 
 say 'DONE! see file "'. $filename . '" for the result';

@@ -22,7 +22,6 @@
     <h1>Code Comparison</h1>
     <table>
       <tr>
-        <th>linediff</th> <!-- distance/edits devided by length -->
         <th>ratio</th> <!-- distance/edits devided by length -->
         <th>distance</th> <!-- edits/changes needed to come from file1 to file2 -->
         <th>delta length</th> <!-- difference in length of file 1 to file2 -->
