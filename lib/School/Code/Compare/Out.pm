@@ -13,6 +13,8 @@ sub new {
                     name   => time(),
                     format => 'tab',
                     lines  => [],
+                    title  => 'Comparion',
+                    description => 'a list of files',
                };
     bless $self, $class;
 
@@ -43,12 +45,30 @@ sub set_lines {
     return $self;
 }
 
-sub write {
-    my $self       = shift;
+sub set_title {
+    my $self = shift;
 
-    my @result   = @{$self->{lines}};
-    my $format   =   $self->{format};
-    my $filename =   $self->{name};
+    $self->{title} = shift;
+
+    return $self;
+}
+
+sub set_description {
+    my $self = shift;
+
+    $self->{description} = shift;
+
+    return $self;
+}
+
+sub write {
+    my $self        = shift;
+
+    my @result      = @{$self->{lines}};
+    my $format      =   $self->{format};
+    my $filename    =   $self->{name};
+    my $title       =   $self->{title};
+    my $description =   $self->{description};
 
     my $tt     = Template->new;
     my $tt_dir = School::Code::Compare::Out::Template::Path->get();
@@ -79,7 +99,11 @@ sub write {
     
     # render again, this time merging the rendered rows into the wrapping body
     $tt->process(   "$tt_dir/Body$format.tt",
-                    { data => $rendered_data_rows },
+                    {
+                      data        => $rendered_data_rows,
+                      title       => $title,
+                      description => $description
+                    },
                     $filename
                 )   || die $tt->error(), "\n";
 

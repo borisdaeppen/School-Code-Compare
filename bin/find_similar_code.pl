@@ -150,6 +150,15 @@ say 'comparing ' . @files . ' files...';
 
 my $now = DateTime->now;
 
+my %info = (
+    visibles =>
+        "All visible chars in normal order. Whitespace removed.",
+    signes =>
+        "Only special chars in normal order. Whitespace and english letters removed.",
+    signes_ordered =>
+        "Only special chars. Whitespace and english letters removed. Chars in lines keep order, but lines get ordered.",
+);
+
 # measure Levenshtein distance within all possible file combinations
 for my $algo ( qw(visibles signes signes_ordered) ) {
 
@@ -199,6 +208,7 @@ for my $algo ( qw(visibles signes signes_ordered) ) {
     my $out = School::Code::Compare::Out->new();
     
     $out->set_name($filename)->set_format($format)->set_lines(\@result);
+    $out->set_title($algo)->set_description($info{$algo});
     
     $out->write();
     

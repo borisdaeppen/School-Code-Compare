@@ -16,10 +16,13 @@
               background-color: red;
       }
     </style>
-      <title>Code Comparison</title>
+      <title>[% title %]</title>
   </head>
   <body>
-    <h1>Code Comparison</h1>
+    <h1>[% title %]</h1>
+    <p>
+    [% description %]
+    </p>
     <table>
       <tr>
         <th>ratio</th> <!-- distance/edits devided by length -->
