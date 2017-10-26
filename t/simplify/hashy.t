@@ -12,9 +12,9 @@ my @lines = read_file( 't/simplify/hashy/miniperl.pl', binmode => ':utf8' );
 
 my $clean = $simplifier->hashy(\@lines);
 
-is($clean->{visibles}, 'usestrict;usev5.22;say"Hi!";', 'miniperl_visibles');
-is($clean->{signes},   ';.;"!";', 'miniperl_signes');
-is($clean->{signes_ordered}, '"!";.;;', 'miniperl_signesordered');
+is($clean->{visibles}, 'usestrict;usev5.22;say"Hi!";', 'perlmini_visibles');
+is($clean->{signes},   ';.;"!";', 'perlmini_signes');
+is($clean->{signes_ordered}, '"!";.;;', 'perlmini_signesordered');
 
 
 @lines = read_file( 't/simplify/hashy/perl.pl', binmode => ':utf8' );
