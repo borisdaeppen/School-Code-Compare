@@ -53,6 +53,13 @@ my $opt_desc_file =
 . "\n$s" . '  - any string to identifiy the output suiting your needs.'
 . "\n$s" . '  - any path, to not store in local directory.';
 
+my $opt_desc_algo =
+    "$s" . 'Define one or more algorithms, used to compare the files:'
+. "\n$s" . '  - visibles'
+. "\n$s" . '  - signes'
+. "\n$s" . '  - signes_ordered'
+. "\n$s" . '  - any combination of above, comma separated';
+
 arg lang => (
     isa      => 'Str',
     required => 1,
@@ -79,13 +86,28 @@ opt file => (
     comment => "file prefix\n" . $opt_desc_file,
 );
 
+opt algo => (
+    isa     => 'Str',
+    alias   => 'a',
+    default => 'visibles,signes,signes_ordered',
+    comment => "algorithm\n" . $opt_desc_algo,
+);
+
 my $o = optargs;
 
+# try not to use outside interface further down in the code...
 my $lang          = $o->{lang};
 my $output_format = $o->{out};
 my $file_prefix   = $o->{file};
+my @algos         = split(',', $o->{algo});
 
-unless ($lang =~ /hashy|python|perl|bash|slashy|php|js|c\+\+|c#|html|txt/) {
+# some input checking...
+for my $algo (@algos) {
+    if ($algo !~ /^visibles$|^signes$|^signes_ordered$/) {
+        die("algorithm not supported\n$opt_desc_algo\n");
+    }
+}
+if ($lang !~ /hashy|python|perl|bash|slashy|php|js|c\+\+|c#|html|txt/) {
     die("lang not supported\n$opt_desc_lang\n");
 }
 
@@ -173,13 +195,13 @@ my %info = (
 );
 
 # measure Levenshtein distance within all possible file combinations
-for my $algo ( qw(visibles signes signes_ordered) ) {
+for my $algo ( @algos ) {
 
     print "working on $algo... ";
 
     my @result = ();
-    my $judge = School::Code::Compare::Judge->new();
-    my $count = 0;
+    my $judge  = School::Code::Compare::Judge->new();
+    my $count  = 0;
 
     for (my $i=0; $i < @files - 1; $i++) {
         for (my $j=$i+1; $j < @files; $j++) {
