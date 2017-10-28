@@ -48,6 +48,11 @@ my $opt_desc_out =
 . "\n$s" . '  - tab'
 . "\n$s" . '  - csv';
 
+my $opt_desc_file =
+    "$s" . 'You can define a prefix to the filename:'
+. "\n$s" . '  - any string to identifiy the output suiting your needs.'
+. "\n$s" . '  - any path, to not store in local directory.';
+
 arg lang => (
     isa      => 'Str',
     required => 1,
@@ -67,10 +72,18 @@ opt out => (
     comment => "output format\n" . $opt_desc_out,
 );
 
+opt file => (
+    isa     => 'Str',
+    alias   => 'f',
+    default => '',
+    comment => "file prefix\n" . $opt_desc_file,
+);
+
 my $o = optargs;
 
 my $lang          = $o->{lang};
 my $output_format = $o->{out};
+my $file_prefix   = $o->{file};
 
 unless ($lang =~ /hashy|python|perl|bash|slashy|php|js|c\+\+|c#|html|txt/) {
     die("lang not supported\n$opt_desc_lang\n");
@@ -199,11 +212,12 @@ for my $algo ( qw(visibles signes signes_ordered) ) {
     	$format = 'TAB'  when /^tab/;
     }
     
-	my $filename =    $now->ymd() . '_' 
-					. $now->hms('-') . '_'
-					. $algo
-					. '.' 
-					. lc $format;
+    my $filename =    $file_prefix
+                    . $now->ymd() . '_' 
+                    . $now->hms('-') . '_'
+                    . $algo
+                    . '.' 
+                    . lc $format;
     
     my $out = School::Code::Compare::Out->new();
     
