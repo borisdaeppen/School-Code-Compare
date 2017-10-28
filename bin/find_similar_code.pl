@@ -11,6 +11,7 @@ use feature 'say';
 use File::Slurp;
 use Getopt::Args;
 use DateTime;
+use IO::Prompter;
 
 use School::Code::Compare;
 use School::Code::Simplify::Comments;
@@ -60,6 +61,11 @@ my $opt_desc_algo =
 . "\n$s" . '  - signes_ordered'
 . "\n$s" . '  - any combination of above, comma separated';
 
+my $opt_desc_prompt =
+    "$s" . 'Programm will start working without further confirmation'
+. "\n$s" . '  - yes'
+. "\n$s" . '  - no';
+
 arg lang => (
     isa      => 'Str',
     required => 1,
@@ -93,6 +99,13 @@ opt algo => (
     comment => "algorithm\n" . $opt_desc_algo,
 );
 
+opt prompt => (
+    isa     => 'Str',
+    alias   => 'p',
+    default => 'y',
+    comment => "Don't prompt for questions\n" . $opt_desc_prompt,
+);
+
 my $o = optargs;
 
 # try not to use outside interface further down in the code...
@@ -100,6 +113,7 @@ my $lang          = $o->{lang};
 my $output_format = $o->{out};
 my $file_prefix   = $o->{file};
 my @algos         = split(',', $o->{algo});
+my $do_prompt   = $o->{prompt};
 
 # some input checking...
 for my $algo (@algos) {
@@ -131,6 +145,21 @@ if (defined $o->{in}) {
 }
 else {
     @FILE_LIST = <STDIN>;
+}
+
+# Calulate how many comparisons will be needed
+# TODO: maybe use math insead of loop
+my $comparison_count = 0;
+for (my $i=0; $i < @FILE_LIST - 1; $i++) {
+    for (my $j=$i+1; $j < @FILE_LIST; $j++) {
+        $comparison_count++;
+    }
+}
+
+# (maybe) ask if job should be started with the current input
+if ($do_prompt =~ /y/) {
+    my $answer = prompt(scalar @algos . " x $comparison_count comparisons needed, continue? [y/n]: ");
+    exit 0 if ($answer =~ /n/);
 }
 
 say 'reading and preparing files...';
@@ -174,14 +203,9 @@ foreach my $filepath ( @FILE_LIST ) {
     };
 }
 
-#use Data::Dumper;
-#say Dumper(\@files);
-
 ################################################
 # DO THE ACTUAL WORK... COMPARING ALL THE DATA #
 ################################################
-
-say 'comparing ' . @files . ' files...';
 
 my $now = DateTime->now;
 
@@ -221,11 +245,13 @@ for my $algo ( @algos ) {
         }
     }
     
-    say "made $count comparisons, rendering output";
+    print "\tdone";
 
     ####################
     # RENDERING OUTPUT #
     ####################
+
+    print "\trendering...";
     
     my $format = 'CSV';
     given ($output_format) {
@@ -248,5 +274,5 @@ for my $algo ( @algos ) {
     
     $out->write();
     
-    say 'DONE! see file "'. $filename . '" for the result';
+    say "\tdone. See $filename";
 }
