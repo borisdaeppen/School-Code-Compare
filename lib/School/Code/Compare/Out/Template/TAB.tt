@@ -1,1 +1,1 @@
-[% linediff %]	[% suspicious %]	[% ratio %]	[% distance %]	[% delta_length %]	[% file1 %]	[% file2 %]	[% comment %]
+[% suspicious %]	[% ratio %]	[% distance %]	[% delta_length %]	[% file1 %]	[% file2 %]	[% comment %]
