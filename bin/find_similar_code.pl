@@ -61,10 +61,9 @@ my $opt_desc_algo =
 . "\n$s" . '  - signes_ordered'
 . "\n$s" . '  - any combination of above, comma separated';
 
-my $opt_desc_prompt =
-    "$s" . 'Programm will start working without further confirmation'
-. "\n$s" . '  - yes'
-. "\n$s" . '  - no';
+my $opt_desc_yes =
+    "$s" . 'Programm will start working without further confirmation.'
+. "\n$s" . '(Answer all user prompts with [yes])';
 
 arg lang => (
     isa      => 'Str',
@@ -99,11 +98,11 @@ opt algo => (
     comment => "algorithm\n" . $opt_desc_algo,
 );
 
-opt prompt => (
-    isa     => 'Str',
-    alias   => 'p',
-    default => 'y',
-    comment => "Don't prompt for questions\n" . $opt_desc_prompt,
+opt yes => (
+    isa     => 'Bool',
+    alias   => 'y',
+#default =>  0,
+    comment => "Don't prompt for questions\n" . $opt_desc_yes,
 );
 
 my $o = optargs;
@@ -113,7 +112,7 @@ my $lang          = $o->{lang};
 my $output_format = $o->{out};
 my $file_prefix   = $o->{file};
 my @algos         = split(',', $o->{algo});
-my $do_prompt   = $o->{prompt};
+my $do_prompt     = !$o->{yes};
 
 # some input checking...
 for my $algo (@algos) {
@@ -157,7 +156,7 @@ for (my $i=0; $i < @FILE_LIST - 1; $i++) {
 }
 
 # (maybe) ask if job should be started with the current input
-if ($do_prompt =~ /y/) {
+if ($do_prompt) {
     my $answer = prompt(scalar @algos . " x $comparison_count comparisons needed, continue? [y/n]: ");
     exit 0 if ($answer =~ /n/);
 }
