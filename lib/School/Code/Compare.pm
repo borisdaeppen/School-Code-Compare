@@ -109,3 +109,26 @@ sub measure {
 }
 
 1;
+
+__END__
+
+=encoding utf8
+
+=head1 BIN / SCRIPT
+
+This distribution ships a script.
+You migth want to look at the script C<compare-code> in the bin directory.
+
+For documentation of the used libraries, keep on reading.
+
+=head1 SYNOPSIS
+
+ my $comparer   = School::Code::Compare->new()                                    
+                                       ->set_max_char_difference(400)             
+                                       ->set_min_char_total     ( 20)             
+                                       ->set_max_distance       (400);
+ 
+ my $comparison = $comparer->measure( $files[$i]->{"code_$algo"},
+                                      $files[$j]->{"code_$algo"}      
+                                    ); 
+
