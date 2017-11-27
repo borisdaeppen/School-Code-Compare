@@ -1,4 +1,5 @@
 package School::Code::Simplify::Comments;
+# ABSTRACT: roughly trim whitespace, depending on commenting style
 
 use strict;
 

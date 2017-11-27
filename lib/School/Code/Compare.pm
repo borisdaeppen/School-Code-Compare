@@ -1,4 +1,5 @@
 package School::Code::Compare;
+# ABSTRACT: Calculate the difference between two strings
 
 use strict;
 use warnings;

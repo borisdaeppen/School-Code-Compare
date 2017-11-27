@@ -1,4 +1,5 @@
 package School::Code::Compare::Out;
+# ABSTRACT: oragnize the output to different formats
 
 use strict;
 use warnings;

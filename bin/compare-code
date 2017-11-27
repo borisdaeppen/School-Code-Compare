@@ -2,6 +2,8 @@
 # Autor: Boris Däppen, 2015-2017
 # No guarantee given, use at own risk and will
 
+# PODNAME: compare-code
+
 use strict;
 use warnings;
 no warnings 'experimental'; # disable warnings from given/when

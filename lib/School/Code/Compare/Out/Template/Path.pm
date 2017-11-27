@@ -1,6 +1,6 @@
 package School::Code::Compare::Out::Template::Path;
+# ABSTRACT: pseudo class to help locating the path of the template files
 
-# We use this pseudo class to help locating the path of the template files
 
 sub get {
     if (__FILE__ =~ m!^(.*)/[^/]+$!) {
