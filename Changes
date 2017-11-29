@@ -1,6 +1,7 @@
 Revision history for School-Code-Compare
  
 {{$NEXT}}
+ - documentation update, mainly for the script in bin directory
 
 0.001     2017-11-27 22:25:07+01:00 Europe/Zurich (TRIAL RELEASE)
  - initial release
