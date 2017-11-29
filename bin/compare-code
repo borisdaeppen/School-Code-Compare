@@ -278,3 +278,60 @@ for my $algo ( @algos ) {
     
     say "\tdone. See $filename";
 }
+
+__END__
+
+=encoding utf8
+
+=head1 SYNOPSIS
+
+This program is developed in an education/school environment.
+It's purpose is to help detect similiarities in the code of IT projects,
+and therefore making assessments (more) fair.
+
+The script compares files containing source code (or any plain text) to each other.
+The approach for comparison is simplistic:
+Whitespace and comments are removed, then the comparion is done using the Levenshtein algorithm.
+Future releases may bring more sophisticated techniques.
+
+This program is written in the Perl Programming Language.
+
+=head2 Example Usage
+
+ compare-code c++ -i list_of_filepaths.txt -o html
+
+ find path/to/projects -type f -name Cow.java | compare-code java -o tab
+
+=head2 Options
+
+ usage: compare-code LANG [OPTIONS...]
+ 
+   Arguments:
+     LANG         language to parse
+                    Supportet options are:
+                      - hashy:  python, perl, bash
+                      - slashy: php, js, c++, c#
+                      - html
+                      - txt
+ 
+   Options:
+     --in,   -i   file to read from (containing filepaths)
+                    otherwise read from STDIN
+     --out,  -o   output format
+                    You can define an output format:
+                      - tab
+                      - csv
+     --file, -f   file prefix
+                    You can define a prefix to the filename:
+                      - any string to identifiy the output suiting your needs.
+                      - any path, to not store in local directory.
+     --algo, -a   algorithm
+                    Define one or more algorithms, used to compare the files:
+                      - visibles
+                      - signes
+                      - signes_ordered
+                      - any combination of above, comma separated
+     --yes,  -y   Don't prompt for questions
+                    Programm will start working without further confirmation.
+                    (Answer all user prompts with [yes])
+
