@@ -14,7 +14,7 @@ use feature 'say';
 use File::Slurp;
 use Getopt::Args;
 use DateTime;
-use IO::Prompter;
+use IO::Prompt::Simple;
 
 use School::Code::Compare;
 use School::Code::Simplify::Comments;
@@ -104,7 +104,7 @@ opt algo => (
 opt yes => (
     isa     => 'Bool',
     alias   => 'y',
-#default =>  0,
+    default =>  0,
     comment => "Don't prompt for questions\n" . $opt_desc_yes,
 );
 
@@ -158,11 +158,24 @@ for (my $i=0; $i < @FILE_LIST - 1; $i++) {
     }
 }
 
+# since STDIN is processed we close it
+# to avoid any trouble with later user ineraction in terminal
+close STDIN;
+
+# we reopen STDIN with the users terminal attached, accoring to comment here:
+# https://stackoverflow.com/questions/9484431/can-i-prompt-for-user-input-after-reading-piped-input-on-stdin-in-perl
+# NOTE: This might be a problem, when trying to run on windows!
+open STDIN, "<", "/dev/tty";
+
 # (maybe) ask if job should be started with the current input
 if ($do_prompt) {
-    my $answer = prompt(scalar @algos . " x $comparison_count comparisons needed, continue? [y/n]: ");
+    my $answer = prompt(scalar @algos
+                  . " x $comparison_count comparisons needed, continue? [Y/n]");
     exit 0 if ($answer =~ /n/);
 }
+
+# close STDIN again, to undo our sins from above
+close STDIN;
 
 say 'reading and preparing files...';
 
