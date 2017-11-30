@@ -2,6 +2,10 @@ Revision history for School-Code-Compare
  
 {{$NEXT}}
 
+0.003     2017-11-30 09:01:25+01:00 Europe/Zurich
+ - documentation update: function docs for main lib
+ - allow absolute paths for Template. System installation seems requiring this
+
 0.002     2017-11-29 10:24:00+01:00 Europe/Zurich
  - documentation update, mainly for the script in bin directory
 
