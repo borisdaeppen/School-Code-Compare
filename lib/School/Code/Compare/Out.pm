@@ -71,7 +71,7 @@ sub write {
     my $title       =   $self->{title};
     my $description =   $self->{description};
 
-    my $tt     = Template->new;
+    my $tt     = Template->new( ABSOLUTE => 1 );
     my $tt_dir = School::Code::Compare::Out::Template::Path->get();
     
     # sort by ratio, but make sure undef values are "big" (meaning, bottom/last)
