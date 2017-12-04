@@ -1,5 +1,5 @@
 package School::Code::Compare::Judge;
-# ABSTRACT: Guess if two strings are so similary, that it's maybe cheating
+# ABSTRACT: guess if two strings are so similary, that it's maybe cheating
 
 use strict;
 use warnings;

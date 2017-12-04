@@ -3,6 +3,7 @@
 # No guarantee given, use at own risk and will
 
 # PODNAME: compare-code
+# ABSTRACT: find similar pieces of code (file based)
 
 use strict;
 use warnings;
@@ -304,7 +305,7 @@ and therefore making assessments (more) fair.
 
 The script compares files containing source code (or any plain text) to each other.
 The approach for comparison is simplistic:
-Whitespace and comments are removed, then the comparion is done using the Levenshtein algorithm.
+Whitespace and comments are removed, then the comparison is done using the Levenshtein algorithm.
 Future releases may bring more sophisticated techniques.
 
 This program is written in the Perl Programming Language.

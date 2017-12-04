@@ -2,6 +2,7 @@ package School::Code::Simplify::Comments;
 # ABSTRACT: roughly trim whitespace, depending on commenting style
 
 use strict;
+use warnings;
 
 sub new {
     my $class = shift;
