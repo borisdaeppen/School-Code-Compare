@@ -1,6 +1,10 @@
 Revision history for School-Code-Compare
  
 {{$NEXT}}
+ - auto generated META.json using dzil plugin [MetaJSON] (MANWAR)
+ - explode dzil [@Basic] so that [GatherDir] excludes repo license
+ - fix minor Kwalitee stuff (add use strict and warnings)
+ - fix some minor typos in documentation
 
 0.004     2017-11-30 09:55:14+01:00 Europe/Zurich
  - replace IO::Prompter with IO::Prompt::Simple (less issues on windows)
