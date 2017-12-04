@@ -117,7 +117,7 @@ __END__
 =head1 SYNOPSIS
 
 This distribution ships a script.
-You migth want to look at the script L<compare-code> in the C<bin> directory.
+You might want to look at the script L<compare-code> in the C<bin> directory.
 For documentation of the used libraries, keep on reading.
 
 This calculates the Levenshtein Difference for two files, if they meet certain criterias:
