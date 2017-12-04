@@ -1,6 +1,8 @@
 Revision history for School-Code-Compare
  
 {{$NEXT}}
+
+0.005     2017-12-04 16:02:32+01:00 Europe/Zurich
  - auto generated META.json using dzil plugin [MetaJSON] (MANWAR)
  - explode dzil [@Basic] so that [GatherDir] excludes repo license
  - fix minor Kwalitee stuff (add use strict and warnings)
