@@ -52,6 +52,7 @@ sub slashy {
 
     foreach my $row (@{$lines_ref}) {
       next if ($row =~ m!^/!);
+      next if ($row =~ m!^\s*\*!);
       $row = $1 if ($row =~ m!(.*)//.*!);
       $row = $1 if ($row =~ m!(.*)/\*.*!);
       $row =~ s/\s*//g;
