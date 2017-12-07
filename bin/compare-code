@@ -124,7 +124,7 @@ for my $algo (@algos) {
         die("algorithm not supported\n$opt_desc_algo\n");
     }
 }
-if ($lang !~ /hashy|python|perl|bash|slashy|php|js|c\+\+|c#|html|txt/) {
+if ($lang !~ /hashy|python|perl|bash|slashy|php|js|c\+\+|c#|java|html|txt/) {
     die("lang not supported\n$opt_desc_lang\n");
 }
 
@@ -201,6 +201,7 @@ foreach my $filepath ( @FILE_LIST ) {
      or $lang eq 'js'
      or $lang eq 'c++'
      or $lang eq 'c#'
+     or $lang eq 'java'
      or $lang eq 'slashy'
      ) {
         $cleaned = $simplifier->slashy ( \@content );
