@@ -185,6 +185,10 @@ my @files = ();
 
 foreach my $filepath ( @FILE_LIST ) {
     chomp( $filepath );
+    # \r (carriage return) causes a nasty error, if it occures in the path
+    # for read_file (sysopen). so we ensure, that there is no \r. ever.
+    # since this loop isn't to big, the additional check isn't really an issue.
+    chop($filepath) if ($filepath =~ m/\r$/); # deal with dos input
 
     my @content = read_file( $filepath, binmode => ':utf8' ) ;
 
