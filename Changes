@@ -1,6 +1,11 @@
 Revision history for School-Code-Compare
  
 {{$NEXT}}
+ - support multiline comments, probably buggy ( /* )
+ - add 'java' as option, added some code_examples
+ - deal with \r (carriage return) at end of file paths (windows)
+ - remove all current files from folder doc (thus whole folder)
+ - add some documentation for windows
 
 0.005     2017-12-04 16:02:32+01:00 Europe/Zurich
  - auto generated META.json using dzil plugin [MetaJSON] (MANWAR)
