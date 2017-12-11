@@ -315,6 +315,8 @@ Future releases may bring more sophisticated techniques.
 
 This program is written in the Perl Programming Language.
 
+If you are unfamiliar with GNU/Linux you might want to read L<Windows.pod> in the doc directory.
+
 =head2 Example Usage
 
  compare-code c++ -i list_of_filepaths.txt -o html
