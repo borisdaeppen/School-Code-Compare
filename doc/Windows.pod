@@ -1,0 +1,12 @@
+=encoding utf8
+
+=head1 WINDOWS
+
+This program should work on dos/windows.
+But it is mainly designed an tested for GNU/Linux.
+
+=head2 CREATE A LIST OF FILES
+
+A simple way to create a list of files:
+
+ dir /s /b test > list.txt
