@@ -1,0 +1,83 @@
+********************************
+* KURZANLEITUNG PLAGIAT FINDER *
+********************************
+
+Ablageort
+*********
+
+Gepackt für Windows:
+/sh-teacher/002_bg302_informatiker/300_projekte/30_Plagiatfinder
+
+Online:
+https://metacpan.org/pod/School::Code::Compare
+
+Installation
+************
+
+Aktuellstes Zip-Archiv auf dem lokalen Rechner entpacken.
+Das Archiv bringt eine komplette Perl-Laufzeitumgebung
+mit installierten Plagiatfinder mit.
+
+Mehr als Entpacken ist nicht nötig, das Progamm ist einsatzbereit.
+
+Vorbereitung Programm
+*********************
+
+In den entpackten Ordner wechseln, dort hat es zwei Datein:
+ - Einen Ordner mit der kompletten Installation (so lassen wie es ist)
+ - Eine Verknüpfung zu einem CMD (hier doppelt klicken)
+
+Nach einem Doppelklick auf die Verknüpfung starten eine Kommandozeile.
+Wir machen kurz folgendes Kommando, da wir im Installations-Order sind:
+
+    cd ..
+
+Das Programm ist nun startklar.
+Als Test lässt sich die Hilfe anzeigen, einfach folgendes eintippen:
+
+    compare-code [ENTER]
+
+Vorbereitung Dateien
+********************
+
+Das Programm benötigt eine Liste mit Pfaden zu den Projektdateien welche zu
+Vergleichen sind.
+Diese Liste lässt sich z.B. mit der Kommandozeile erstellen:
+
+    dir /s /b PROJEKTORDNER | findstr /i "\.php$"> liste.txt
+
+Die Datei liste.txt enthält nun in diesem Beispiel alle Pfade zu den PHP-Dateien
+im Ordner PROJEKTORDNER.
+
+Mit Hilfe dieser Liste weiss der Plagiatfinder welche Dateien er vergleichen
+soll.
+Am besten wird diese Liste kurz manuell geprüft und von Pfaden befreit die nicht
+verglichen werden sollen, wie z.B.:
+    - externe Libraries (jQuery, etc)
+    - Vorgegebene Dateien der Lehrperson
+    - Framework-Dateien
+
+Damit verhindern wir unnötige Vergleiche und Plagiat-Erkennungen.
+
+Vergleich aller Dateien
+***********************
+
+Mit dem folgendem Beispiel-Befehl vergleichen wir nun alle Dateien:
+
+compare-code php -o html -i liste.txt
+
+Das heisst:
+Vergleiche optimiert nach PHP, das Ergebnis gerne in HTML, den Input aus Liste.
+
+Nach wenigen Sekunden sollten ein paar HTML-Dateien mit dem Ergebnis auftauchen.
+
+Das Resultat
+************
+
+Das Resultat als HTML enthält im Normalfall drei Dateien:
+
+    - visibles:       Code-Einrückung/Formatierung irrelevant.
+    - signes:         Code-Einrückung/Formatierung und Namen irrelevant.
+    - signes-ordered: Zusätzlich noch Zeilenreihenfolge irrelevant.
+
+Verdächtige Dateien sind rot und gelb markiert.
