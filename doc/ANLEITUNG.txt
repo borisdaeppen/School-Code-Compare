@@ -2,6 +2,15 @@
 * KURZANLEITUNG PLAGIAT FINDER *
 ********************************
 
+DIESE SOFTWARE IST IM ALPHA STADIUM.
+DIE ERGEBNISSE MIT VORSICHT INTERPRETIEREN. DIE SOFTWARE KANN
+FEHLER ENTHALTEN UND POTENTIELL SCHADEN VERURSACHEN.
+
+Autor
+*****
+
+Boris Däppen
+
 Ablageort
 *********
 
@@ -16,7 +25,7 @@ Installation
 
 Aktuellstes Zip-Archiv auf dem lokalen Rechner entpacken.
 Das Archiv bringt eine komplette Perl-Laufzeitumgebung
-mit installierten Plagiatfinder mit.
+mit installiertem Plagiatfinder mit.
 
 Mehr als Entpacken ist nicht nötig, das Progamm ist einsatzbereit.
 
@@ -77,7 +86,18 @@ Das Resultat
 Das Resultat als HTML enthält im Normalfall drei Dateien:
 
     - visibles:       Code-Einrückung/Formatierung irrelevant.
-    - signes:         Code-Einrückung/Formatierung und Namen irrelevant.
+    - signes:         Code-Einrückung/Formatierung und Code-Namen irrelevant.
     - signes-ordered: Zusätzlich noch Zeilenreihenfolge irrelevant.
 
 Verdächtige Dateien sind rot und gelb markiert.
+
+Fragen
+******
+
+Bei Fragen bitte den Autor kontaktieren:
+
+boris punkt daeppen ät gibb punkt ch
+
+
+Dezember 2017, Boris Däppen
+
