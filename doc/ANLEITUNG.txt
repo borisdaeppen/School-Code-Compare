@@ -15,31 +15,32 @@ Ablageort
 *********
 
 Gepackt für Windows:
-/sh-teacher/002_bg302_informatiker/300_projekte/30_Plagiatfinder
+Auf Lehrer-Ablage für Informatiker im Ordner: 300_projekte/30_Plagiatfinder
 
 Online:
 https://metacpan.org/pod/School::Code::Compare
 
-Installation
-************
+Installation Laufzeitumgebung
+*****************************
 
-Aktuellstes Zip-Archiv auf dem lokalen Rechner entpacken.
-Das Archiv bringt eine komplette Perl-Laufzeitumgebung
-mit installiertem Plagiatfinder mit.
+Zip-Archiv auf dem lokalen Rechner entpacken.
+(Achtung: In einen Ordner entpacken, sonst verteilen sich die Dateien im
+aktuellen Verzeichnis)
 
-Mehr als Entpacken ist nicht nötig, das Progamm ist einsatzbereit.
+Der entpackte Ordner enthält eine komplette Perl-Laufzeitumgebung.
+Es handelt sich um eine "portable" Version, und muss somit nicht weiter
+installiert werden.
 
 Vorbereitung Programm
 *********************
 
-In den entpackten Ordner wechseln, dort hat es zwei Datein:
- - Einen Ordner mit der kompletten Installation (so lassen wie es ist)
- - Eine Verknüpfung zu einem CMD (hier doppelt klicken)
+- In den entpackten Ordner wechseln.
+- Die Datei portableshell.bat mit Doppelklick starten.
+  Dies startet eine Kommandozeile.
+- Das Programm für den aktuellen Rechner installieren (benötigt Internet).
+  Hierfür folgendes Kommando in die Kommandozeile entippen:
 
-Nach einem Doppelklick auf die Verknüpfung starten eine Kommandozeile.
-Wir machen kurz folgendes Kommando, da wir im Installations-Order sind:
-
-    cd ..
+    cpan School::Code::Compare [ENTER]
 
 Das Programm ist nun startklar.
 Als Test lässt sich die Hilfe anzeigen, einfach folgendes eintippen:
@@ -73,7 +74,7 @@ Vergleich aller Dateien
 
 Mit dem folgendem Beispiel-Befehl vergleichen wir nun alle Dateien:
 
-compare-code php -o html -i liste.txt
+    compare-code php -o html -i liste.txt
 
 Das heisst:
 Vergleiche optimiert nach PHP, das Ergebnis gerne in HTML, den Input aus Liste.
