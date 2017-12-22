@@ -3,8 +3,8 @@
 ********************************
 
 DIESE SOFTWARE IST IM ALPHA STADIUM.
-DIE ERGEBNISSE MIT VORSICHT INTERPRETIEREN. DIE SOFTWARE KANN
-FEHLER ENTHALTEN UND POTENTIELL SCHADEN VERURSACHEN.
+DIE ERGEBNISSE MIT VORSICHT INTERPRETIEREN. DIE SOFTWARE KANN FEHLER ENTHALTEN
+UND POTENTIELL SCHADEN VERURSACHEN.
 
 Autor
 *****
@@ -15,7 +15,7 @@ Ablageort
 *********
 
 Gepackt für Windows:
-Auf Lehrer-Ablage für Informatiker im Ordner: 300_projekte/30_Plagiatfinder
+Auf Dateishare für Informatiklehrer im Ordner: 300_projekte/30_Plagiatfinder
 
 Online:
 https://metacpan.org/pod/School::Code::Compare
@@ -23,9 +23,9 @@ https://metacpan.org/pod/School::Code::Compare
 Installation Laufzeitumgebung
 *****************************
 
-Zip-Archiv auf dem lokalen Rechner entpacken.
-(Achtung: In einen Ordner entpacken, sonst verteilen sich die Dateien im
-aktuellen Verzeichnis)
+- Zip-Archiv auf dem lokalen Rechner entpacken.
+  (Achtung: In einen Ordner entpacken, sonst verteilen sich die Dateien im
+  aktuellen Verzeichnis)
 
 Der entpackte Ordner enthält eine komplette Perl-Laufzeitumgebung.
 Es handelt sich um eine "portable" Version, und muss somit nicht weiter
@@ -35,8 +35,8 @@ Vorbereitung Programm
 *********************
 
 - In den entpackten Ordner wechseln.
-- Die Datei portableshell.bat mit Doppelklick starten.
-  Dies startet eine Kommandozeile.
+- Die Datei portableshell.bat mit Doppelklick starten. Dies startet eine
+  Kommandozeile.
 - Das Programm für den aktuellen Rechner installieren (benötigt Internet).
   Hierfür folgendes Kommando in die Kommandozeile entippen:
 
@@ -51,8 +51,7 @@ Vorbereitung Dateien
 ********************
 
 Das Programm benötigt eine Liste mit Pfaden zu den Projektdateien welche zu
-Vergleichen sind.
-Diese Liste lässt sich z.B. mit der Kommandozeile erstellen:
+Vergleichen sind. Diese Liste lässt sich z.B. mit der Kommandozeile erstellen:
 
     dir /s /b PROJEKTORDNER | findstr /i "\.php$"> liste.txt
 
@@ -60,9 +59,8 @@ Die Datei liste.txt enthält nun in diesem Beispiel alle Pfade zu den PHP-Dateie
 im Ordner PROJEKTORDNER.
 
 Mit Hilfe dieser Liste weiss der Plagiatfinder welche Dateien er vergleichen
-soll.
-Am besten wird diese Liste kurz manuell geprüft und von Pfaden befreit die nicht
-verglichen werden sollen, wie z.B.:
+soll. Am besten wird diese Liste kurz manuell geprüft und von Pfaden befreit die
+nicht verglichen werden sollen, wie z.B.:
     - externe Libraries (jQuery, etc)
     - Vorgegebene Dateien der Lehrperson
     - Framework-Dateien
