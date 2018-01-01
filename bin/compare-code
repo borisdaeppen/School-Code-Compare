@@ -255,6 +255,9 @@ for my $algo ( @algos ) {
             my $comparison = $comparer->measure( $files[$i]->{"code_$algo"},
                                                  $files[$j]->{"code_$algo"}
                                                );
+
+            # throw the "skipped" comparisons away, to thin out the result
+            next if ( $comparison->{comment} =~ /^skipped/);
     
             $comparison->{file1} = $files[$i]->{path};
             $comparison->{file2} = $files[$j]->{path};
