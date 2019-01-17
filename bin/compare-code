@@ -42,7 +42,7 @@ use School::Code::Compare::Out;
 
 my $s = '                   ';
 my $opt_desc_lang =
-    "$s" . 'Supportet options are:'
+    "$s" . 'Supportet arguments:'
 . "\n$s" . '  - hashy:  python, perl, bash'
 . "\n$s" . '  - slashy: php, js, c++, c#'
 . "\n$s" . '  - html'
@@ -50,6 +50,7 @@ my $opt_desc_lang =
 
 my $opt_desc_out =
     "$s" . 'You can define an output format:'
+. "\n$s" . '  - html'
 . "\n$s" . '  - tab'
 . "\n$s" . '  - csv';
 
