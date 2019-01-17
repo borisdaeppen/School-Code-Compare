@@ -333,7 +333,7 @@ If you are unfamiliar with GNU/Linux you might want to read L<doc::Windows> in t
  
    Arguments:
      LANG         language to parse
-                    Supportet options are:
+                    Supportet arguments:
                       - hashy:  python, perl, bash
                       - slashy: php, js, c++, c#
                       - html
@@ -344,6 +344,7 @@ If you are unfamiliar with GNU/Linux you might want to read L<doc::Windows> in t
                     otherwise read from STDIN
      --out,  -o   output format
                     You can define an output format:
+                      - html
                       - tab
                       - csv
      --file, -f   file prefix
