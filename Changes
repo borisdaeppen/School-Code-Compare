@@ -1,6 +1,7 @@
 Revision history for School-Code-Compare
  
 {{$NEXT}}
+ - switch repo from github to gitlab in dist.ini meta information
 
 0.007     2019-01-17 13:54:55+01:00 Europe/Zurich
  - throw "skipped" comparisons away
