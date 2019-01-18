@@ -28,4 +28,4 @@ When you have a file containing your paths, you can run the program:
 
  compare-code java -i paths.txt -o html
 
-You should the find some html files in your current directory.
+You should then find some html files in your current directory.
