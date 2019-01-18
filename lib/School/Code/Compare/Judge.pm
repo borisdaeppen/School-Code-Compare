@@ -1,5 +1,5 @@
 package School::Code::Compare::Judge;
-# ABSTRACT: guess if two strings are so similary, that it's maybe cheating
+# ABSTRACT: guess if two strings are so similar, that it's maybe cheating
 
 use strict;
 use warnings;
@@ -51,3 +51,24 @@ sub look {
 }
 
 1;
+
+__END__
+
+=encoding utf8
+
+=head1 SYNOPSIS
+
+ use School::Code::Compare::Judge;
+
+ my $judge  = School::Code::Compare::Judge->new();
+
+ # this will alter the content of the hash argument provided
+ $judge->look($comparison);
+ 
+=head1 FUNCTIONS
+
+=head2 set_suspicious_ratio
+
+=head2 set_highly_suspicious_ratio
+
+=head2 look
